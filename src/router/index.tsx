@@ -10,6 +10,9 @@ import Dashboard from "../pages/admin/dashboard";
 import Employees from "../pages/admin/employees";
 import Departments from "../pages/admin/departments";
 import Leaves from "../pages/admin/leaves";
+import EmployeeLayout from "../layouts/dashboard/EmployeeLayout";
+import Emdashboard from "../pages/employee/dashboard";
+import EmLeaves from "../pages/employee/leaves";
 export const router = createBrowserRouter([
   {
     path: "/auth/",
@@ -57,6 +60,22 @@ export const router = createBrowserRouter([
       {
         path: "leaves",
         element: <Leaves/>,
+      },
+    ],
+  },
+  {
+    path: "/employee/",
+    element: <EmployeeLayout/>,
+    children: [
+      {
+        path: "dashboard",
+        element: <Emdashboard/>,
+      },
+
+ 
+      {
+        path: "leaves",
+        element: <EmLeaves/>,
       },
     ],
   },
