@@ -1,3 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body{
+    font-family: 'Manrope', sans-serif;
+}
+/* Add this to your CSS file or style section */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
