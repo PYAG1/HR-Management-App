@@ -75,13 +75,14 @@ export default function CreateEmployeeButton() {
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
   };
   const validationSchemaStep0 = Yup.object().shape({
-    email: Yup.string().email("Invalid email").required("Email is required"),
-    firstname: Yup.string().required("First name is required"),
-    lastname: Yup.string().required("Last name is required"),
-    gender: Yup.string()
-      .oneOf(["Male", "Female"], "Invalid gender")
-      .required("Gender is required"),
-    contact: Yup.string().required("Contact number is required"),
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    firstname: Yup.string().required('First name is required'),
+    lastname: Yup.string().required('Last name is required'),
+    departmentId: Yup.string().required('Department ID is required'),
+    role: Yup.string().required('Role is required'),
+    salary: Yup.number().required('Salary is required').positive('Salary must be a positive number'),
+    gender: Yup.string().oneOf(['Male', 'Female'], 'Invalid gender').required('Gender is required'),
+    contact: Yup.string().required('Contact number is required'),
   });
 
   const formikStep0 = useFormik({
@@ -91,12 +92,19 @@ export default function CreateEmployeeButton() {
       lastname: "",
       gender: "",
       contact: "",
+      role: '',
+      salary: '',
+      departmentId:""
+   
+      
     },
     validationSchema: validationSchemaStep0,
     onSubmit: (values) => {
       console.log(values);
     },
   });
+
+
 
   const renderData = () => {
     switch (currentStep) {
@@ -145,8 +153,30 @@ export default function CreateEmployeeButton() {
 
       case 1:
         return (
-          <div>
-            <p>Step 1 content goes here</p>
+          <div className=" grid grid-cols-2 gap-5">
+      <TextField
+      id="role"
+      placeholder="Enter assigned role"
+      label="Role"
+      type="text"
+      {...formikStep0}
+      />
+         <TextField
+      id="salary"
+      placeholder="Enter gross salary"
+      label="Salary(Ghc)"
+      type="number"
+      {...formikStep0}
+      />
+      <CustomSelect
+           options={[
+            { id: "Male", name: "Male" },
+            { id: "Female", name: "Female" },
+          ]}
+          id={"departmentId"}
+          label={"Department"}
+          {...formikStep0}
+      />
           </div>
         );
 
@@ -222,9 +252,7 @@ export default function CreateEmployeeButton() {
                         </Dialog.Title>
                         <div className="mt-2">
                           <p className="text-sm text-gray-500">
-                            Are you sure you want to deactivate your account?
-                            All of your data will be permanently removed. This
-                            action cannot be undone.
+                       Fill in the neccessary data to add an employee
                           </p>
                         </div>
                       </div>
@@ -236,13 +264,24 @@ export default function CreateEmployeeButton() {
                   </div>
 
                   <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 absolute bottom-0 right-0">
-                    <button
+                 {
+                  currentStep === 2 ? (   <button
+                    type="button"
+                    
+                    className={`inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm ${!formikStep0.isValid ||  !formikStep0.dirty ? "cursor-not-allowed ":"" }`}
+                    onClick={() => nextStep()}
+                    disabled={!formikStep0.isValid || !formikStep0.dirty}
+                  >
+                 Submit
+                  </button>):(   <button
                       type="button"
                       className="inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                       onClick={() => nextStep()}
+                   
                     >
                       Next
-                    </button>
+                    </button>)
+                 }
                     <button
                       type="button"
                       className={`mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm ${

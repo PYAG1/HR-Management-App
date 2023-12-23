@@ -1,6 +1,7 @@
 import React from 'react'
-import { ArrowDownIcon, ArrowUpIcon } from '@heroicons/react/20/solid'
+
 import { CursorArrowRaysIcon, EnvelopeOpenIcon, UsersIcon,UserMinusIcon } from '@heroicons/react/24/outline'
+import { BASE_URL } from '../../utils'
 
 const stats = [
   { id: 1, name: 'Total Employees', stat: '71,897', icon: UsersIcon, change: '122', changeType: 'increase' },
@@ -13,6 +14,7 @@ function classNames(...classes:string[]) {
 }
 
 export default function Dashboard() {
+
   return (
     <div className='w-full max-h-[90svh]'>
         <div className=' w-full text-white bg-background h-[45vh]  rounded-xl p-5 font-[Manrope]'>

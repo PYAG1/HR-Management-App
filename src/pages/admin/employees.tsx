@@ -23,6 +23,10 @@ export default function Employees() {
   return (
     <div>
         <StackedHeader tabs={tabs}/>
+        <div className=' w-full h-full'>
+         
+
+        </div>
     </div>
   )
 }
