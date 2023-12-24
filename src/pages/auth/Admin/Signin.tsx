@@ -28,8 +28,8 @@ function AdminSignin() {
   useEffect(() => {
     if (isSuccess) {
       toast.success("Account created");
-      console.log(data.data.message)
-      navigate("/auth/admin/login");
+      localStorage.setItem("admin-token",data.data?.token)
+      navigate("/admin/dashboard");
     }
     if (isError) {
       toast.error(`Manager already exists.`);
