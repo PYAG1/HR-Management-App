@@ -23,10 +23,7 @@ export default function StackedHeader({ tabs }: { tabs: Tab[] }) {
   return (
     <div className="relative border-b border-gray-200 pb-5 sm:pb-0">
       <div className="md:flex md:items-center md:justify-between">
-        <div className="mt-3 flex md:absolute md:top-3 md:right-0 md:mt-0">
-     
-    <CreateEmployeeButton/>
-        </div>
+   
       </div>
       <div className="mt-4">
 

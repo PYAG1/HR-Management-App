@@ -1,13 +1,20 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+
+interface TableComponentTypes{
+    columnTitles:string[],
+    renderBody:()=> ReactNode,
+    loading:boolean,
+    renderPagination?:()=> ReactNode
+}
 
 export default function TableComponent({
   columnTitles,
   renderBody,
   loading,
   renderPagination,
-}: any) {
+}: TableComponentTypes) {
   return (
     <div className="px-4 sm:px-6 lg:px-8 h-full w-full">
       <div className="-mx-4 mt-8  shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg">
