@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import TextField from "../../../core-ui/text-field";
 import * as Yup from "yup";
 import CustomSelect from "../../../core-ui/custom-select";
+import TextAreaField from "../../../core-ui/text-area";
 
 const steps = [
   { id: "01", name: "Applicant details", href: "#", status: "current" },
@@ -86,14 +87,10 @@ export default function CreateLeaveButton() {
 
   const formikStep0 = useFormik({
     initialValues: {
-      email: "",
-      firstname: "",
-      lastname: "",
-      gender: "",
-      contact: "",
-      role: '',
-      salary: '',
-      departmentId:""
+      startDate: "",
+      endDate: "",
+      leaveType: "",
+      reason: "",
    
       
     },
@@ -109,43 +106,60 @@ export default function CreateLeaveButton() {
     switch (currentStep) {
       case 0:
         return (
-          <div className="w-full grid grid-cols-2 gap-5">
-            <TextField
-              type={"text"}
-              id={"firstname"}
-              placeholder={"Enter Firstname"}
-              label={"Firstname"}
-              {...formikStep0}
-            />
-            <TextField
-              type={"text"}
-              id={"lastname"}
-              placeholder={"Enter Lastname"}
-              label={"Lastname"}
-              {...formikStep0}
-            />
-            <TextField
-              type={"email"}
-              id={"email"}
-              placeholder={"Enter Email"}
-              label={"Email"}
-              {...formikStep0}
-            />
-            <TextField
-              type={"text"}
-              id={"contact"}
-              placeholder={"Enter Contact"}
-              label={"Contact"}
-              {...formikStep0}
-            />
+          <div className="w-full space-y-4 gap-5">
+
             <CustomSelect
               options={[
-                { id: "Male", name: "Male" },
-                { id: "Female", name: "Female" },
+                { id: "BEAVEMENT", name: "Bereavement" },
+                { id: "SICK", name: "Sick" },
+                { id: "CASUAL", name: "Casual" },
               ]}
-              id={"gender"}
-              label={"Gender"}
+              id={"leaveType"}
+              label={"Leave Type"}
               {...formikStep0}
+            />
+            <div className=" w-full grid grid-cols-2 gap-5 ">
+            <div className=" w-full flex flex-col gap-3 lg:gap-2">
+                  <label htmlFor="startDate" className=" text-base">
+                    Start Date
+                  </label>
+                  <input
+                    name="startDate"
+                    type="date"
+                    value={formikStep0.values.startDate}
+                    onChange={formikStep0.handleChange}
+                    className=" min-w-[80px] outline-none border-[#000]/25 border-[1px] px-3 py-1 rounded focus:border-[#AFDBF5]     text-black"
+                  />
+                  {formikStep0.errors.startDate && (
+                    <p className="text-[#EF0107] font-[300] text-[0.8rem]">
+                      *{formikStep0.errors.startDate}
+                    </p>
+                  )}
+                </div>
+                <div className=" w-full flex flex-col gap-3 lg:gap-2">
+                  <label htmlFor="endDate" className=" text-base">
+                    End Date
+                  </label>
+                  <input
+                    name="endDate"
+                    type="date"
+                    value={formikStep0.values.endDate}
+                    onChange={formikStep0.handleChange}
+                    className=" min-w-[80px] outline-none border-[#000]/25 border-[1px] px-3 py-1 rounded focus:border-[#AFDBF5]     text-black"
+                  />
+                  {formikStep0.errors.endDate && (
+                    <p className="text-[#EF0107] font-[300] text-[0.8rem]">
+                      *{formikStep0.errors.endDate}
+                    </p>
+                  )}
+                </div>
+            </div>
+            <TextAreaField
+             id="reason"
+             placeholder="Enter your reason to request a leave"
+             label="Reason"
+            
+            {...formikStep0}
             />
           </div>
         );
@@ -202,7 +216,7 @@ export default function CreateLeaveButton() {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full xl:w-8/12 h-[70vh]">
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full xl:w-5/12  min-h-[80vh]">
                   <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">

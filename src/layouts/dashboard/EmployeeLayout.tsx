@@ -21,7 +21,7 @@ const navigation = [
   },
 
 
-  { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
+  //{ name: "Calendar", href: "#", icon: CalendarIcon, current: false },
   // { name: 'Documents', href: '#', icon: InboxIcon, current: false },
   { name: "Leaves", href: "/employee/leaves", icon: ChartBarIcon, current: false },
 ];
