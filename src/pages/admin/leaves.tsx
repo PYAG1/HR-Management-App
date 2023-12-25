@@ -8,9 +8,10 @@ import {
   PaperClipIcon,
   PencilIcon,
   TrashIcon,
+  XMarkIcon,
 } from "@heroicons/react/20/solid";
 import { Fragment } from "react";
-import { EyeIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { PencilSquareIcon } from "@heroicons/react/20/solid";
 import ViewEmployeeModal from "../../components/admin/employee/ViewEmployeeModal";
 import DeleteEmployee from "../../components/admin/employee/DeleteEmployeeModal";
@@ -93,13 +94,21 @@ export default function Leaves() {
                     </div>
                     <div className="relative flex justify-center">
                       <span className="isolate inline-flex -space-x-px rounded-md shadow-sm">
-                        <button
+                      <button
                           type="button"
                           className="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
                         >
                           <span className="sr-only">Edit</span>
-                          <PencilIcon className="h-4 w-4" aria-hidden="true" />
+                          <CheckCircleIcon className="h-4 w-4" aria-hidden="true" />
                         </button>
+                        <button
+                          type="button"
+                          className="relative inline-flex items-center bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+                        >
+                          <span className="sr-only">Edit</span>
+                          <XMarkIcon className="h-4 w-4" aria-hidden="true" />
+                        </button>
+                     
                         <ViewEmployeeModal />
                       </span>
                     </div>

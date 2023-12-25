@@ -14,6 +14,8 @@ import { EyeIcon } from "@heroicons/react/24/outline";
 import { PencilSquareIcon } from "@heroicons/react/20/solid";
 import ViewEmployeeModal from "../../components/admin/employee/ViewEmployeeModal";
 import DeleteEmployee from "../../components/admin/employee/DeleteEmployeeModal";
+import CreateEmployeeButton from "../../components/admin/employee/createEmployeeButton";
+import EditEmployeeModal from "../../components/admin/employee/EditEmployeeModal";
 
 export default function Employees() {
   const tabs = [
@@ -46,7 +48,7 @@ export default function Employees() {
   ];
   return (
     <div>
-      <StackedHeader tabs={tabs} />
+      <StackedHeader tabs={tabs} renderButton={()=> <CreateEmployeeButton/>} />
       <div className=" w-full h-full">
         <TableComponent
           loading={false}
@@ -83,13 +85,8 @@ export default function Employees() {
       </div>
       <div className="relative flex justify-center">
         <span className="isolate inline-flex -space-x-px rounded-md shadow-sm">
-          <button
-            type="button"
-            className="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
-          >
-            <span className="sr-only">Edit</span>
-            <PencilIcon className="h-4 w-4" aria-hidden="true" />
-          </button>
+     
+     <EditEmployeeModal/>
           <ViewEmployeeModal />
           <DeleteEmployee />
         </span>

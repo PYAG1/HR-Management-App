@@ -8,6 +8,7 @@ import {
   UsersIcon,
   XMarkIcon,
   BuildingOffice2Icon,
+  ArrowRightStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { extractPageTitle } from "../../utils";
@@ -149,7 +150,7 @@ export default function AdminLayout() {
                     </nav>
                   </div>
                   <div className="flex flex-shrink-0 bg-gray-700 p-4">
-                    <a href="#" className="group block flex-shrink-0">
+                  
                       <div className="flex items-center">
                         <div>
                           <img
@@ -160,14 +161,15 @@ export default function AdminLayout() {
                         </div>
                         <div className="ml-3">
                           <p className="text-base font-medium text-white">
-                            Tom Cook
+                            Admin
                           </p>
                           <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">
                             View profile
                           </p>
                         </div>
                       </div>
-                    </a>
+                  
+                <ArrowRightStartOnRectangleIcon className=" w-5 h-5 text-white"/>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
@@ -216,7 +218,7 @@ export default function AdminLayout() {
               </nav>
             </div>
             <div className="flex flex-shrink-0 bg-gray-700 p-4">
-              <a href="#" className="group block w-full flex-shrink-0">
+              <div className="group justify-between flex items-center  w-full flex-shrink-0">
                 <div className="flex items-center">
                   <div>
                     <img
@@ -226,13 +228,16 @@ export default function AdminLayout() {
                     />
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-white">Tom Cook</p>
+                    <p className="text-sm font-medium text-white">Admin</p>
                     <p className="text-xs font-medium text-gray-300 group-hover:text-gray-200">
                       View profile
                     </p>
                   </div>
+                 
                 </div>
-              </a>
+                <ArrowRightStartOnRectangleIcon className=" w-5 h-5 text-white"/>
+              </div>
+            
             </div>
           </div>
         </div>

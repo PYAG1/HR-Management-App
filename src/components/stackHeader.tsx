@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from "react";
+import { ReactNode, SetStateAction, useState } from "react";
 import { Tab } from "../utils/types";
 import CreateEmployeeButton from "./admin/employee/createEmployeeButton";
 
@@ -6,7 +6,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function StackedHeader({ tabs }: { tabs: Tab[] }) {
+export default function StackedHeader({ tabs,renderButton }: { tabs: Tab[], renderButton?:()=> ReactNode }) {
   const [selectedTab, setSelectedTab] = useState(
     //ts-ignore
     tabs.find((tab) => tab?.current)?.name
@@ -22,9 +22,16 @@ export default function StackedHeader({ tabs }: { tabs: Tab[] }) {
 
   return (
     <div className="relative border-b border-gray-200 pb-5 sm:pb-0">
+  {
+    renderButton && (
       <div className="md:flex md:items-center md:justify-between">
-   
+      <div className="mt-3 flex md:absolute md:top-3 md:right-0 md:mt-0">
+     
+   {renderButton()}
+         </div>
       </div>
+    )
+  }
       <div className="mt-4">
 
         <div className="hidden sm:block">

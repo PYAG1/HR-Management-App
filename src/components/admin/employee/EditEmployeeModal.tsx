@@ -1,24 +1,51 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import {
-  CheckIcon,
-  XMarkIcon,
-  EyeIcon,
-  PaperClipIcon,
-} from "@heroicons/react/24/outline";
+import { XMarkIcon, PencilIcon } from "@heroicons/react/24/outline";
+import TextField from "../../../core-ui/text-field";
+import { useFormik } from "formik";
+import * as Yup from "yup"
 
-export default function ViewEmployeeModal() {
+export default function EditEmployeeModal() {
   const [open, setOpen] = useState(false);
+  const validationSchema= Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    firstname: Yup.string().required('First name is required'),
+    lastname: Yup.string().required('Last name is required'),
+    departmentId: Yup.string().required('Department ID is required'),
+    role: Yup.string().required('Role is required'),
+    salary: Yup.number().required('Salary is required').positive('Salary must be a positive number'),
+    gender: Yup.string().oneOf(['Male', 'Female'], 'Invalid gender').required('Gender is required'),
+    contact: Yup.string().required('Contact number is required'),
+  });
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      firstname: "",
+      lastname: "",
+      gender: "",
+      contact: "",
+      role: '',
+      salary: '',
+      departmentId:""
+   
+      
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
+
 
   return (
     <>
       <button
         type="button"
-        onClick={() => setOpen(true)}
-        className="relative inline-flex items-center rounded-r-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+        onClick={()=> setOpen(true)}
+        className="relative inline-flex items-center rounded-l-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
       >
-        <span className="sr-only">Annotate</span>
-        <EyeIcon className="h-4 w-4" aria-hidden="true" />
+        <span className="sr-only">Edit</span>
+        <PencilIcon className="h-4 w-4" aria-hidden="true" />
       </button>
 
       <Transition.Root show={open} as={Fragment}>
@@ -55,10 +82,10 @@ export default function ViewEmployeeModal() {
                       >
                         <div className="px-4 py-6 sm:px-6">
                           <h3 className="text-base font-semibold leading-7 text-gray-900">
-                            Applicant Information
+                            Edit Employee Information
                           </h3>
                           <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
-                            Personal details and application.
+                           Edit Employee details 
                           </p>
                         </div>
                         <button
@@ -72,38 +99,11 @@ export default function ViewEmployeeModal() {
                       </Dialog.Title>
                       <div className="mt-2">
                         <div className="overflow-hidden bg-white shadow sm:rounded-lg">
-                          <dl className="grid grid-cols-1 sm:grid-cols-2 divide-y divide-gray-100 p-4">
-                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-                              <dt className="text-sm font-medium leading-6 text-gray-900">
-                                Full name
-                              </dt>
-                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                Margot Foster
-                              </dd>
-                            </div>
-                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-                              <dt className="text-sm font-medium leading-6 text-gray-900">
-                                Application for
-                              </dt>
-                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                Backend Developer
-                              </dd>
-                            </div>
-                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-                              <dt className="text-sm font-medium leading-6 text-gray-900">
-                                Email address
-                              </dt>
-                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                margotfoster@example.com
-                              </dd>
-                            </div>
-                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
-                              <dt className="text-sm font-medium leading-6 text-gray-900">
-                                Salary expectation
-                              </dt>
-                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                $120,000
-                              </dd>
+                          <dl className=" divide-gray-100 p-4">
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0 grid grid-cols-2" >
+                           <TextField/>
+
+
                             </div>
                             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-2 sm:px-0">
                               <dt className="text-sm font-medium leading-6 text-gray-900">

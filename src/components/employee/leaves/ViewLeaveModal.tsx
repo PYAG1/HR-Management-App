@@ -7,7 +7,7 @@ import {
   PaperClipIcon,
 } from "@heroicons/react/24/outline";
 
-export default function ViewEmployeeModal() {
+export default function LeaveDetailsModal() {
   const [open, setOpen] = useState(false);
 
   return (
@@ -15,7 +15,7 @@ export default function ViewEmployeeModal() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="relative inline-flex items-center rounded-r-md bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+        className="relative inline-flex items-center rounded-md  bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
       >
         <span className="sr-only">Annotate</span>
         <EyeIcon className="h-4 w-4" aria-hidden="true" />
@@ -55,10 +55,10 @@ export default function ViewEmployeeModal() {
                       >
                         <div className="px-4 py-6 sm:px-6">
                           <h3 className="text-base font-semibold leading-7 text-gray-900">
-                            Applicant Information
+                            Leave Details
                           </h3>
                           <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
-                            Personal details and application.
+                           Details about your requested leave.
                           </p>
                         </div>
                         <button

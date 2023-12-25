@@ -1,7 +1,7 @@
 import axios from "axios"
 import toast from "react-hot-toast"
 import { BASE_URL } from "..";
-import {  } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface SignUpValues {
     email: string;
