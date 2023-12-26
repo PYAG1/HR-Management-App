@@ -167,9 +167,41 @@ export default function CreateLeaveButton() {
 
       case 1:
         return (
-          <div>
-            <p>Step 2 content goes here</p>
+         <div className=" w-full space-y-6">
+           <div className=" w-full grid grid-cols-2 gap-8">
+            <div >
+              <p>Start Date:</p>
+              <p>{"Not Specified"|| ""}</p>
+            </div>
+            <div >
+              <p>End Date:</p>
+              <p>{"Not Specified"|| ""}</p>
+            </div>
+            <div >
+              <p>Number of Days:</p>
+              <p>{"Not Specified"|| ""}</p>
+            </div>
+            <div >
+              <p>Leave Type:</p>
+              <p>{"Not Specified"|| ""}</p>
+            </div>
+            <div >
+              <p>Date Requested:</p>
+              <p>{"Not Specified"|| ""}</p>
+            </div>
+
+            <div >
+              <p>Status:</p>
+              <p>{"Not Specified"|| ""}</p>
+            </div>
           </div>
+          <div >
+              <p>Reason:</p>
+              <p>
+{"Not Specified"|| ""}
+              </p>
+            </div>
+         </div>
         );
 
       default:

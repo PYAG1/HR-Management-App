@@ -183,7 +183,41 @@ export default function CreateEmployeeButton() {
       case 2:
         return (
           <div>
-            <p>Step 2 content goes here</p>
+                      <div className=" w-full grid grid-cols-2 gap-8">
+            <div >
+              <p>FirstName:</p>
+              <p>{"Not Specified"|| ""}</p>
+            </div>
+            <div >
+              <p>LastName:</p>
+              <p>{"Not Specified"|| ""}</p>
+            </div>
+            <div >
+              <p>Email:</p>
+              <p>{"Not Specified"|| ""}</p>
+            </div>
+            <div >
+              <p>Contact:</p>
+              <p>{"Not Specified"|| ""}</p>
+            </div>
+            <div >
+              <p>Role:</p>
+              <p>{"Not Specified"|| ""}</p>
+            </div>
+
+            <div >
+              <p>Salary:</p>
+              <p>{"Not Specified"|| ""}</p>
+            </div>
+            <div >
+              <p>Department:</p>
+              <p>{"Not Specified"|| ""}</p>
+            </div>
+            <div >
+              <p>Gender:</p>
+              <p>{"Not Specified"|| ""}</p>
+            </div>
+          </div>
           </div>
         );
 

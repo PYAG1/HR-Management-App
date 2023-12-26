@@ -1,11 +1,6 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import {
-  CheckIcon,
-  XMarkIcon,
-  EyeIcon,
-  PaperClipIcon,
-} from "@heroicons/react/24/outline";
+import { XMarkIcon, EyeIcon } from "@heroicons/react/24/outline";
 
 export default function LeaveDetailsModal() {
   const [open, setOpen] = useState(false);
@@ -58,7 +53,7 @@ export default function LeaveDetailsModal() {
                             Leave Details
                           </h3>
                           <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
-                           Details about your requested leave.
+                            Details about your requested leave.
                           </p>
                         </div>
                         <button
