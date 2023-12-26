@@ -1,8 +1,15 @@
 This is actually a V2 our software engineering mini project.
+
 FrontEnd: PYAG1 ,
 BackEnd: https://github.com/frimpsss
 
+
+
 This is a simple HR-app with two main platforms, admin and employee.
+Main Branch contains base UI without integration.
+
+Current Url: 
+Old Url : https://humanresource5.vercel.app/
 
 ADMIN FUNCTIONALITIES
 . Onboarding and Offboarding of employees
