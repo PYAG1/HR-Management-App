@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -6,8 +6,13 @@ import { useFormik } from "formik";
 import TextField from "../../../core-ui/text-field";
 import * as Yup from "yup";
 import CustomSelect from "../../../core-ui/custom-select";
-import { useMutation } from "react-query";
-import { CreateEmployeeMutation } from "../../../utils/adminActions";
+import { useMutation, useQuery } from "react-query";
+import {
+  CreateEmployeeMutation,
+  GetAllDepartments,
+} from "../../../utils/adminActions";
+import { ClipLoader } from "react-spinners";
+import toast from "react-hot-toast";
 
 const steps = [
   { id: "01", name: "Applicant details", href: "#", status: "current" },
@@ -69,7 +74,18 @@ export default function CreateEmployeeButton() {
   const cancelButtonRef = useRef(null);
   const [currentStep, setCurrentStep] = useState(0);
 
-  const {isLoading,isError,mutate:CreateEmployee} = useMutation({mutationFn:CreateEmployeeMutation})
+  const {
+    isLoading,
+    isError,
+    isSuccess,
+    mutate: CreateEmployee,
+  } = useMutation({ mutationFn: CreateEmployeeMutation });
+  const {
+    isLoading: loading,
+    isError: Error,
+    data: departmentData,
+  } = useQuery({ queryKey: ["get_departments"], queryFn: GetAllDepartments });
+
   const nextStep = () => {
     setCurrentStep((prevStep) => Math.min(prevStep + 1, steps.length - 1));
   };
@@ -78,14 +94,18 @@ export default function CreateEmployeeButton() {
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
   };
   const validationSchemaStep0 = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Email is required'),
-    firstname: Yup.string().required('First name is required'),
-    lastname: Yup.string().required('Last name is required'),
-    departmentId: Yup.string().required('Department ID is required'),
-    role: Yup.string().required('Role is required'),
-    salary: Yup.number().required('Salary is required').positive('Salary must be a positive number'),
-    gender: Yup.string().oneOf(['Male', 'Female'], 'Invalid gender').required('Gender is required'),
-    contact: Yup.string().required('Contact number is required'),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    firstname: Yup.string().required("First name is required"),
+    lastname: Yup.string().required("Last name is required"),
+    departmentId: Yup.string().required("Department ID is required"),
+    role: Yup.string().required("Role is required"),
+    salary: Yup.number()
+      .required("Salary is required")
+      .positive("Salary must be a positive number"),
+    gender: Yup.string()
+      .oneOf(["Male", "Female"], "Invalid gender")
+      .required("Gender is required"),
+    contact: Yup.string().required("Contact number is required"),
   });
 
   const formikStep0 = useFormik({
@@ -95,19 +115,24 @@ export default function CreateEmployeeButton() {
       lastname: "",
       gender: "",
       contact: "",
-      role: '',
-      salary: '',
-      departmentId:""
-   
-      
+      role: "",
+      salary: "",
+      departmentId: "",
     },
     validationSchema: validationSchemaStep0,
     onSubmit: async (values) => {
-    await CreateEmployee(values)
+      await CreateEmployee(values);
     },
   });
-
-
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Department created");
+      setOpen(false);
+    }
+    if (isError) {
+      toast.error(`Error something occured.`);
+    }
+  }, [isSuccess, isError]);
 
   const renderData = () => {
     switch (currentStep) {
@@ -157,70 +182,73 @@ export default function CreateEmployeeButton() {
       case 1:
         return (
           <div className=" grid grid-cols-2 gap-5">
-      <TextField
-      id="role"
-      placeholder="Enter assigned role"
-      label="Role"
-      type="text"
-      {...formikStep0}
-      />
-         <TextField
-      id="salary"
-      placeholder="Enter gross salary"
-      label="Salary(Ghc)"
-      type="number"
-      {...formikStep0}
-      />
-      <CustomSelect
-           options={[
-            { id: "Male", name: "Male" },
-            { id: "Female", name: "Female" },
-          ]}
-          id={"departmentId"}
-          label={"Department"}
-          {...formikStep0}
-      />
+            <TextField
+              id="role"
+              placeholder="Enter assigned role"
+              label="Role"
+              type="text"
+              {...formikStep0}
+            />
+            <TextField
+              id="salary"
+              placeholder="Enter gross salary"
+              label="Salary(Ghc)"
+              type="number"
+              {...formikStep0}
+            />
+            <CustomSelect
+              options={
+                loading
+                  ? [{ id: "loading", name: "Loading..." }]
+                  : Error
+                  ? [{ id: "error", name: "Failed to Fetch" }]
+                  : departmentData?.data?.data || []
+              }
+              id={"departmentId"}
+              label={"Department"}
+              {...formikStep0}
+            />
           </div>
         );
 
       case 2:
         return (
           <div>
-                      <div className=" w-full grid grid-cols-2 gap-8">
-            <div >
-              <p>FirstName:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-            <div >
-              <p>LastName:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-            <div >
-              <p>Email:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-            <div >
-              <p>Contact:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-            <div >
-              <p>Role:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
+            <div className=" w-full grid grid-cols-2 gap-8">
+              <div>
+                <p>FirstName:</p>
+                <p>{"Not Specified" || ""}</p>
+              </div>
+              <div>
+                <p>LastName:</p>
+                <p>{"Not Specified" || ""}</p>
+              </div>
+              <div>
+                <p>Email:</p>
+                <p>{"Not Specified" || ""}</p>
+              </div>
+              <div>
+                <p>Contact:</p>
+                <p>{"Not Specified" || ""}</p>
+              </div>
+              <div>
+                <p>Role:</p>
+                <p>{"Not Specified" || ""}</p>
+              </div>
 
-            <div >
-              <p>Salary:</p>
-              <p>{"Not Specified"|| ""}</p>
+              <div>
+                <p>Salary:</p>
+                <p>{"Not Specified" || ""}</p>
+              </div>
+              <div>
+                <p>Department:</p>
+                <p>{"Not Specified" || ""}</p>
+              </div>
+              <div>
+                <p>Gender:</p>
+                <p>{"Not Specified" || ""}</p>
+              </div>
             </div>
-            <div >
-              <p>Department:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-            <div >
-              <p>Gender:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-          </div>
           </div>
         );
 
@@ -289,7 +317,7 @@ export default function CreateEmployeeButton() {
                         </Dialog.Title>
                         <div className="mt-2">
                           <p className="text-sm text-gray-500">
-                       Fill in the neccessary data to add an employee
+                            Fill in the neccessary data to add an employee
                           </p>
                         </div>
                       </div>
@@ -301,24 +329,32 @@ export default function CreateEmployeeButton() {
                   </div>
 
                   <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 absolute bottom-0 right-0">
-                 {
-                  currentStep === 2 ? (   <button
-                    type="button"
-                    
-                    className={`inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm ${!formikStep0.isValid ||  !formikStep0.dirty ? "cursor-not-allowed ":"" }`}
-                    onClick={() => nextStep()}
-                    disabled={!formikStep0.isValid || !formikStep0.dirty}
-                  >
-                 Submit
-                  </button>):(   <button
-                      type="button"
-                      className="inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                      onClick={() => nextStep()}
-                   
-                    >
-                      Next
-                    </button>)
-                 }
+                    {currentStep === 2 ? (
+                      <button
+                        type="button"
+                        className={`inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm ${
+                          !formikStep0.isValid || !formikStep0.dirty
+                            ? "cursor-not-allowed "
+                            : ""
+                        }`}
+                        onClick={() => nextStep()}
+                        disabled={!formikStep0.isValid || !formikStep0.dirty}
+                      >
+                        {isLoading ? (
+                          <ClipLoader size={20} color="black" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                        onClick={() => nextStep()}
+                      >
+                        Next
+                      </button>
+                    )}
                     <button
                       type="button"
                       className={`mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm ${

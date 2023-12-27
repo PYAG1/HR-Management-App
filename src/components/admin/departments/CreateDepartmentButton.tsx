@@ -6,21 +6,21 @@ import { Dialog, Transition } from "@headlessui/react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import TextField from "../../../core-ui/text-field";
-import { QueryClient, useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { CreateDepartment } from "../../../utils/adminActions";
-import { useNavigate } from "react-router-dom";
+
 import { ClipLoader } from "react-spinners";
 
 export default function CreateDepartmentButton() {
-  const queryClient = new QueryClient()
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
 
   const cancelButtonRef = useRef(null);
   const { isLoading, isSuccess, isError, mutate } = useMutation({
     mutationFn: CreateDepartment,
-    onSuccess:()=>{
-      queryClient.invalidateQueries(["get_departments"])
-    }
+    onSuccess: () => {
+      queryClient.invalidateQueries(["get_departments"]);
+    },
   });
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -31,15 +31,14 @@ export default function CreateDepartmentButton() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-    
-    await  mutate(values);
+      await mutate(values);
     },
   });
 
   useEffect(() => {
     if (isSuccess) {
       toast.success("Department created");
-      setOpen(false)
+      setOpen(false);
     }
     if (isError) {
       toast.error(`Error something occured.`);

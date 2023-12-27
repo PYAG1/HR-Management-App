@@ -44,9 +44,11 @@ export const adminSignInMutation= (data:SigninValues)=>{
 }
 
 export const CreateEmployeeMutation= (data:EmployeeData)=>{
-  return axios.post(`${BASE_URL}/api/employee/register`, data)
+  return axios.post(`${BASE_URL}/api/employee/register`, data,{headers:{
+    'Authorization': `Bearer ${AdminToken}`
+  }})
 }
-
+ 
 export const CreateDepartment=(data:any)=>{
   return axios.post(`${BASE_URL}/api/department/create`,data,{headers:{
     'Authorization': `Bearer ${AdminToken}`
@@ -58,6 +60,11 @@ export const CreateDepartment=(data:any)=>{
 //QUERIES
 export const GetAllDepartments=()=>{
   return axios.get(`${BASE_URL}/api/department/all`,{headers:{
+    'Authorization': `Bearer ${AdminToken}`
+  }})
+}
+export const GetAllEmploees=()=>{
+  return axios.get(`${BASE_URL}/employee/all`,{headers:{
     'Authorization': `Bearer ${AdminToken}`
   }})
 }
