@@ -6,6 +6,8 @@ import { useFormik } from "formik";
 import TextField from "../../../core-ui/text-field";
 import * as Yup from "yup";
 import CustomSelect from "../../../core-ui/custom-select";
+import { useMutation } from "react-query";
+import { CreateEmployeeMutation } from "../../../utils/adminActions";
 
 const steps = [
   { id: "01", name: "Applicant details", href: "#", status: "current" },
@@ -67,6 +69,7 @@ export default function CreateEmployeeButton() {
   const cancelButtonRef = useRef(null);
   const [currentStep, setCurrentStep] = useState(0);
 
+  const {isLoading,isError,mutate:CreateEmployee} = useMutation({mutationFn:CreateEmployeeMutation})
   const nextStep = () => {
     setCurrentStep((prevStep) => Math.min(prevStep + 1, steps.length - 1));
   };
@@ -99,8 +102,8 @@ export default function CreateEmployeeButton() {
       
     },
     validationSchema: validationSchemaStep0,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+    await CreateEmployee(values)
     },
   });
 

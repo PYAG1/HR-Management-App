@@ -3,6 +3,9 @@ import toast from "react-hot-toast"
 import { BASE_URL } from "..";
 import { useNavigate } from "react-router-dom";
 
+
+const AdminToken = localStorage.getItem("admin-token")
+
 interface SignUpValues {
     email: string;
     password: string;
@@ -25,6 +28,12 @@ interface SignUpValues {
     salary: string; // You might want to change this to a numeric type if salary is a number
     departmentId: string;
   };
+
+ export  interface DepartmentsType{
+    id: string;
+    name: string;
+    managerId: string;
+  }
   
 
 export const signUpMutation = (data:SignUpValues) => {
@@ -35,7 +44,20 @@ export const adminSignInMutation= (data:SigninValues)=>{
 }
 
 export const CreateEmployeeMutation= (data:EmployeeData)=>{
-  return axios.post(`${BASE_URL}/api/admin/login`, data)
+  return axios.post(`${BASE_URL}/api/employee/register`, data)
+}
+
+export const CreateDepartment=(data:any)=>{
+  return axios.post(`${BASE_URL}/api/department/create`,data,{headers:{
+    'Authorization': `Bearer ${AdminToken}`
+  }})
 }
 
 
+
+//QUERIES
+export const GetAllDepartments=()=>{
+  return axios.get(`${BASE_URL}/api/department/all`,{headers:{
+    'Authorization': `Bearer ${AdminToken}`
+  }})
+}
