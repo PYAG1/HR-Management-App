@@ -3,6 +3,9 @@ import { CheckBadgeIcon, CursorArrowRaysIcon, UserMinusIcon, UsersIcon } from "@
 import React from "react";
 import { useQuery } from "react-query";
 import { getSingleEmployee } from "../../utils/employeeActions";
+import { Link } from "react-router-dom";
+import Skeleton from "react-loading-skeleton";
+import { PuffLoader } from "react-spinners";
 
 
 export default function Emdashboard() {
@@ -30,8 +33,8 @@ export default function Emdashboard() {
             </svg>
           </span>
           <div className=" space-y-2">
-            <p className=" md:text-3xl   font-medium ">
-              Good Morning, {EmployeeData?.data?.data?.firstname} {EmployeeData?.data?.data?.lastname}
+            <p className=" md:text-3xl   font-medium flex flex-row ">
+              Good Morning, {isLoading ? (""):(<p>{EmployeeData?.data?.data?.firstname} {EmployeeData?.data?.data?.lastname}</p>)}
             </p>{" "}
             <div>
               {EmployeeData?.data?.data?.status === "Active" ? (
@@ -75,14 +78,14 @@ export default function Emdashboard() {
               <p className="ml-16 truncate text-sm font-medium text-gray-500">{item.name}</p>
             </dt>
             <dd className="ml-16 flex items-baseline pb-6 sm:pb-7">
-              <p className="text-2xl  text-white">{item.stat}</p>
+              <p className="text-2xl  text-white">{isLoading ? (<PuffLoader size={40} color="white"/>):(item.stat)}</p>
    
               <div className="absolute inset-x-0 bottom-0 bg-lightbackground px-4 py-4 sm:px-6">
                 <div className="text-sm">
-                  <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                  <Link to="/employee/leaves" className="font-medium text-indigo-600 hover:text-indigo-500">
                     {' '}
                     View all<span className="sr-only"> {item.name} stats</span>
-                  </a>
+                  </Link >
                 </div>
               </div>
             </dd>
