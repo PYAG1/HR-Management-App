@@ -6,8 +6,9 @@ import {
   EyeIcon,
   PaperClipIcon,
 } from "@heroicons/react/24/outline";
+import { EmployeeData } from "../../../utils/adminActions";
 
-export default function ViewEmployeeModal() {
+export default function ViewEmployeeModal({data}:{data:EmployeeData}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -72,21 +73,21 @@ export default function ViewEmployeeModal() {
                       </Dialog.Title>
                       <div className="mt-2">
                         <div className="overflow-hidden bg-white shadow sm:rounded-lg">
-                          <dl className="grid grid-cols-1 sm:grid-cols-2 divide-y divide-gray-100 p-4">
+                          <dl className="grid grid-cols-1 sm:grid-cols-3 divide-y divide-gray-100 p-4">
                             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
                               <dt className="text-sm font-medium leading-6 text-gray-900">
                                 Full name
                               </dt>
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                Margot Foster
+                               {data.firstname} {data.lastname}
                               </dd>
                             </div>
                             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
                               <dt className="text-sm font-medium leading-6 text-gray-900">
-                                Application for
+                            Role
                               </dt>
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                Backend Developer
+                                {data.role}
                               </dd>
                             </div>
                             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -94,7 +95,7 @@ export default function ViewEmployeeModal() {
                                 Email address
                               </dt>
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                margotfoster@example.com
+                            {data.email}
                               </dd>
                             </div>
                             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -102,10 +103,63 @@ export default function ViewEmployeeModal() {
                                 Salary expectation
                               </dt>
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                $120,000
+                               Ghc {data.salary}.00
                               </dd>
                             </div>
-                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-2 sm:px-0">
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                              <dt className="text-sm font-medium leading-6 text-gray-900">
+                                Contact
+                              </dt>
+                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                              {data.contact}
+                              </dd>
+                            </div>
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                              <dt className="text-sm font-medium leading-6 text-gray-900">
+                                Gender
+                              </dt>
+                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                              {data.gender}
+                              </dd>
+                            </div>
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                              <dt className="text-sm font-medium leading-6 text-gray-900">
+                                Department
+                              </dt>
+                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                              {data.gender}
+                              </dd>
+                            </div>
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                              <dt className="text-sm font-medium leading-6 text-gray-900">
+                               Leaves Days Left
+                              </dt>
+                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                              {data.leaveDaysRemaining}
+                              </dd>
+                            </div>
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                              <dt className="text-sm font-medium leading-6 text-gray-900">
+                               Status
+                              </dt>
+                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                               {
+                                data.status === "Active" ? (      <span className="inline-flex items-center gap-x-1.5 rounded-md bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                                <svg className="h-1.5 w-1.5 fill-green-500" viewBox="0 0 6 6" aria-hidden="true">
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                active
+                              </span>): (      <span className="inline-flex items-center gap-x-1.5 rounded-md bg-red-100 px-2 py-1 text-xs font-medium text-red-700">
+                                <svg className="h-1.5 w-1.5 fill-red-500" viewBox="0 0 6 6" aria-hidden="true">
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                Badge
+                              </span>)
+                               }
+                              </dd>
+                            </div>
+                            
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-3 sm:px-0">
                               <dt className="text-sm font-medium leading-6 text-gray-900">
                                 About
                               </dt>

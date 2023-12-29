@@ -18,7 +18,7 @@ interface SignUpValues {
   }
 
 
-  type EmployeeData = {
+  export type EmployeeData = {
     email: string;
     firstname: string;
     lastname: string;
@@ -27,6 +27,8 @@ interface SignUpValues {
     role: string;
     salary: string; // You might want to change this to a numeric type if salary is a number
     departmentId: string;
+    status?:string;
+    leaveDaysRemaining?:number
   };
 
  export  interface DepartmentsType{
@@ -64,7 +66,7 @@ export const GetAllDepartments=()=>{
   }})
 }
 export const GetAllEmploees=()=>{
-  return axios.get(`${BASE_URL}/employee/all`,{headers:{
+  return axios.get(`${BASE_URL}/employees/all`,{headers:{
     'Authorization': `Bearer ${AdminToken}`
   }})
 }

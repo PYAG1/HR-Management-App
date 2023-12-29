@@ -2,6 +2,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import emailjs from "@emailjs/browser";
 import { useFormik } from "formik";
 import TextField from "../../../core-ui/text-field";
 import * as Yup from "yup";
@@ -13,12 +14,14 @@ import {
 } from "../../../utils/adminActions";
 import { ClipLoader } from "react-spinners";
 import toast from "react-hot-toast";
+import { EMAILJS_KEY, TEMP_KEY, generatePwd } from "../../../utils";
 
 const steps = [
   { id: "01", name: "Applicant details", href: "#", status: "current" },
   { id: "02", name: "Application form", href: "#", status: "upcoming" },
   { id: "03", name: "Preview", href: "#", status: "upcoming" },
 ];
+console.log(EMAILJS_KEY);
 
 function Steps({ currentStep }: { currentStep: number }) {
   const stackHeaders = steps.map((step, index) => ({
@@ -79,7 +82,12 @@ export default function CreateEmployeeButton() {
     isError,
     isSuccess,
     mutate: CreateEmployee,
-  } = useMutation({ mutationFn: CreateEmployeeMutation });
+  } = useMutation({
+    mutationFn: CreateEmployeeMutation,
+    onSuccess: async () => {
+      await sendEmail();
+    },
+  });
   const {
     isLoading: loading,
     isError: Error,
@@ -117,6 +125,7 @@ export default function CreateEmployeeButton() {
       contact: "",
       role: "",
       salary: "",
+      password: generatePwd(8),
       departmentId: "",
     },
     validationSchema: validationSchemaStep0,
@@ -124,6 +133,20 @@ export default function CreateEmployeeButton() {
       await CreateEmployee(values);
     },
   });
+  const form = useRef<any>();
+
+  const sendEmail = () => {
+    emailjs
+      .sendForm("service_dimuceh", TEMP_KEY, form.current, EMAILJS_KEY)
+      .then(
+        (result) => {
+          toast.success("Sent");
+        },
+        (error) => {
+          toast.error("Email not sent");
+        }
+      );
+  };
   useEffect(() => {
     if (isSuccess) {
       toast.success("Department created");
@@ -138,7 +161,7 @@ export default function CreateEmployeeButton() {
     switch (currentStep) {
       case 0:
         return (
-          <div className="w-full grid grid-cols-2 gap-5">
+          <div className="w-full grid grid-cols-2 gap-10">
             <TextField
               type={"text"}
               id={"firstname"}
@@ -153,13 +176,7 @@ export default function CreateEmployeeButton() {
               label={"Lastname"}
               {...formikStep0}
             />
-            <TextField
-              type={"email"}
-              id={"email"}
-              placeholder={"Enter Email"}
-              label={"Email"}
-              {...formikStep0}
-            />
+
             <TextField
               type={"text"}
               id={"contact"}
@@ -181,7 +198,22 @@ export default function CreateEmployeeButton() {
 
       case 1:
         return (
-          <div className=" grid grid-cols-2 gap-5">
+          <div className=" grid grid-cols-2 gap-5" ref={form}>
+            <TextField
+              type={"email"}
+              id={"email"}
+              placeholder={"Enter Email"}
+              label={"Email"}
+              {...formikStep0}
+            />
+            <TextField
+              type={"password"}
+              id={"password"}
+              placeholder={""}
+              label={"Password"}
+              readonly={true}
+              {...formikStep0}
+            />
             <TextField
               id="role"
               placeholder="Enter assigned role"
@@ -217,36 +249,36 @@ export default function CreateEmployeeButton() {
             <div className=" w-full grid grid-cols-2 gap-8">
               <div>
                 <p>FirstName:</p>
-                <p>{"Not Specified" || ""}</p>
+                <p>{formikStep0.values.firstname || "Not Specified" }</p>
               </div>
               <div>
                 <p>LastName:</p>
-                <p>{"Not Specified" || ""}</p>
+                <p>{formikStep0.values.lastname ||"Not Specified" }</p>
               </div>
               <div>
                 <p>Email:</p>
-                <p>{"Not Specified" || ""}</p>
+                <p>{formikStep0.values.email ||"Not Specified"}</p>
               </div>
               <div>
                 <p>Contact:</p>
-                <p>{"Not Specified" || ""}</p>
+                <p>{formikStep0.values.contact ||"Not Specified" }</p>
               </div>
               <div>
                 <p>Role:</p>
-                <p>{"Not Specified" || ""}</p>
+                <p>{formikStep0.values.role || "Not Specified" }</p>
               </div>
 
               <div>
                 <p>Salary:</p>
-                <p>{"Not Specified" || ""}</p>
+                <p>{formikStep0.values.salary || "Not Specified" }</p>
               </div>
               <div>
                 <p>Department:</p>
-                <p>{"Not Specified" || ""}</p>
+                <p>{formikStep0.values.departmentId || "Not Specified" }</p>
               </div>
               <div>
                 <p>Gender:</p>
-                <p>{"Not Specified" || ""}</p>
+                <p>{formikStep0.values.gender ||"Not Specified" }</p>
               </div>
             </div>
           </div>
@@ -296,7 +328,7 @@ export default function CreateEmployeeButton() {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full xl:w-8/12 h-[70vh]">
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full xl:w-8/12 min-h-[72vh]">
                   <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
@@ -328,7 +360,7 @@ export default function CreateEmployeeButton() {
                     <div>{renderData()}</div>
                   </div>
 
-                  <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 absolute bottom-0 right-0">
+                  <div className=" px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 absolute bottom-0 right-0">
                     {currentStep === 2 ? (
                       <button
                         type="button"
@@ -337,7 +369,7 @@ export default function CreateEmployeeButton() {
                             ? "cursor-not-allowed "
                             : ""
                         }`}
-                        onClick={() => nextStep()}
+                        onClick={() => formikStep0.handleSubmit()}
                         disabled={!formikStep0.isValid || !formikStep0.dirty}
                       >
                         {isLoading ? (
