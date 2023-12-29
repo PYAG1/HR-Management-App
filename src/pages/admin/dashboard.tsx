@@ -2,6 +2,7 @@ import React from 'react'
 
 import { CursorArrowRaysIcon, EnvelopeOpenIcon, UsersIcon,UserMinusIcon } from '@heroicons/react/24/outline'
 import { BASE_URL } from '../../utils'
+import { getTimeOfDay } from '../../utils/getTimeOfDay'
 
 const stats = [
   { id: 1, name: 'Total Employees', stat: '71,897', icon: UsersIcon, change: '122', changeType: 'increase' },
@@ -9,16 +10,14 @@ const stats = [
   { id: 3, name: 'Vacancies', stat: '24.57%', icon: CursorArrowRaysIcon, change: '3.2%', changeType: 'decrease' },
 ]
 
-function classNames(...classes:string[]) {
-  return classes.filter(Boolean).join(' ')
-}
+
 
 export default function Dashboard() {
 
   return (
     <div className='w-full max-h-[90svh]'>
         <div className=' w-full text-white bg-background h-[45vh]  rounded-xl p-5 font-[Manrope]'>
-            <p className=' md:text-3xl   font-medium '>Morning, Admin</p>
+            <p className=' md:text-3xl   font-medium '>Good {getTimeOfDay()}, Admin</p>
             <div>
       <h3 className="text-lg font-medium leading-6 text-gray-900">Last 30 days</h3>
 

@@ -6,6 +6,7 @@ import { getSingleEmployee } from "../../utils/employeeActions";
 import { Link } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import { PuffLoader } from "react-spinners";
+import { getTimeOfDay } from "../../utils/getTimeOfDay";
 
 
 export default function Emdashboard() {
@@ -34,7 +35,7 @@ export default function Emdashboard() {
           </span>
           <div className=" space-y-2">
             <p className=" md:text-3xl   font-medium flex flex-row ">
-              Good Morning, {isLoading ? (""):(<p>{EmployeeData?.data?.data?.firstname} {EmployeeData?.data?.data?.lastname}</p>)}
+             Good {getTimeOfDay()}, {isLoading ? (""):(<p>{EmployeeData?.data?.data?.firstname} {EmployeeData?.data?.data?.lastname}</p>)}
             </p>{" "}
             <div>
               {EmployeeData?.data?.data?.status === "Active" ? (
