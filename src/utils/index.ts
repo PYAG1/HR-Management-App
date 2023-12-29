@@ -6,3 +6,4 @@ export {default as generatePwd} from "./generateRandompassword"
 export const BASE_URL = import.meta.env.VITE_BASE_URL;
 export const EMAILJS_KEY = import.meta.env.VITE_EMAILJS_KEY
 export const TEMP_KEY = import.meta.env.VITE_EMAILJS_TEM
+export const SERVICE_KEY = import.meta.env.VITE_SERVICE_KEY

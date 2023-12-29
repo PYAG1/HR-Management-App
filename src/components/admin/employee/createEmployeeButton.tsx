@@ -2,7 +2,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import emailjs from "@emailjs/browser";
+import emailjs, { sendForm } from "@emailjs/browser";
 import { useFormik } from "formik";
 import TextField from "../../../core-ui/text-field";
 import * as Yup from "yup";
@@ -14,14 +14,14 @@ import {
 } from "../../../utils/adminActions";
 import { ClipLoader } from "react-spinners";
 import toast from "react-hot-toast";
-import { EMAILJS_KEY, TEMP_KEY, generatePwd } from "../../../utils";
+import { EMAILJS_KEY, SERVICE_KEY, TEMP_KEY, generatePwd } from "../../../utils";
 
 const steps = [
   { id: "01", name: "Applicant details", href: "#", status: "current" },
   { id: "02", name: "Application form", href: "#", status: "upcoming" },
   { id: "03", name: "Preview", href: "#", status: "upcoming" },
 ];
-console.log(EMAILJS_KEY);
+
 
 function Steps({ currentStep }: { currentStep: number }) {
   const stackHeaders = steps.map((step, index) => ({
@@ -73,10 +73,11 @@ function Steps({ currentStep }: { currentStep: number }) {
 
 export default function CreateEmployeeButton() {
   const [open, setOpen] = useState(false);
+  const [formContent, setFormContent] = useState<any>();
 
   const cancelButtonRef = useRef(null);
   const [currentStep, setCurrentStep] = useState(0);
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const {
     isLoading,
     isError,
@@ -85,10 +86,13 @@ export default function CreateEmployeeButton() {
     mutate: CreateEmployee,
   } = useMutation({
     mutationFn: CreateEmployeeMutation,
-    onSuccess:()=>{
-      queryClient.invalidateQueries(["get_allEmployees"]);
+    onSuccess: () => {
+      //  formikStep0.resetForm()
+    sendEmail();
       setOpen(false);
-    }
+      setCurrentStep(0);
+      queryClient.invalidateQueries(["get_allEmployees"]);
+    },
   });
   const {
     isLoading: loading,
@@ -99,8 +103,6 @@ export default function CreateEmployeeButton() {
   const nextStep = () => {
     setCurrentStep((prevStep) => Math.min(prevStep + 1, steps.length - 1));
   };
-
-
 
   const prevStep = () => {
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
@@ -135,31 +137,17 @@ export default function CreateEmployeeButton() {
     validationSchema: validationSchemaStep0,
     onSubmit: async (values) => {
       await CreateEmployee(values);
-      formikStep0.resetForm()
+    
     },
   });
   const form = useRef<any>();
 
-  const sendEmail = () => {
-    emailjs
-      .sendForm("service_dimuceh", TEMP_KEY, form.current, EMAILJS_KEY)
-      .then(
-        (result) => {
-          toast.success("Sent");
-        },
-        (error) => {
-          toast.error("Email not sent");
-        }
-      );
-  };
   useEffect(() => {
     if (isSuccess) {
       toast.success("Employee added successfully");
-      
     }
     if (isError) {
       toast.error(`${error}`);
-  
     }
   }, [isSuccess, isError]);
 
@@ -204,7 +192,7 @@ export default function CreateEmployeeButton() {
 
       case 1:
         return (
-          <div className=" grid grid-cols-2 gap-5" ref={form}>
+          <form className=" grid grid-cols-2 gap-5" ref={form} id="form">
             <TextField
               type={"email"}
               id={"email"}
@@ -246,7 +234,7 @@ export default function CreateEmployeeButton() {
               label={"Department"}
               {...formikStep0}
             />
-          </div>
+          </form>
         );
 
       case 2:
@@ -294,7 +282,23 @@ export default function CreateEmployeeButton() {
         return null; // Handle invalid step number
     }
   };
-
+  const sendEmail = () => {
+    emailjs
+      .sendForm(
+        SERVICE_KEY,
+        TEMP_KEY,
+        formContent,
+        EMAILJS_KEY
+      )
+      .then(
+        (result) => {
+          toast.success("email sent");
+        },
+        (error) => {
+          console.log("email not sent");
+        }
+      );
+  };
   return (
     <>
       <button
@@ -375,7 +379,11 @@ export default function CreateEmployeeButton() {
                             ? "cursor-not-allowed "
                             : ""
                         }`}
-                        onClick={() => formikStep0.handleSubmit()}
+                        onClick={async (
+                          e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                        ) => {
+                          formikStep0.handleSubmit();
+                        }}
                         disabled={!formikStep0.isValid || !formikStep0.dirty}
                       >
                         {isLoading ? (
@@ -388,7 +396,12 @@ export default function CreateEmployeeButton() {
                       <button
                         type="button"
                         className="inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                        onClick={() => nextStep()}
+                        onClick={() => {
+                          nextStep();
+                          if (currentStep === 1) {
+                            setFormContent(form.current);
+                          }
+                        }}
                       >
                         Next
                       </button>
