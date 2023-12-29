@@ -1,6 +1,7 @@
 import { ReactNode, SetStateAction, useState } from "react";
 import { Tab } from "../utils/types";
 import CreateEmployeeButton from "./admin/employee/createEmployeeButton";
+import { Link } from "react-router-dom";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -37,9 +38,9 @@ export default function StackedHeader({ tabs,renderButton }: { tabs: Tab[], rend
         <div className="hidden sm:block">
           <nav className="-mb-px flex space-x-8">
             {tabs.map((tab) => (
-              <a
+              <Link
                 key={tab.name}
-                href={tab.href}
+                to={tab.href}
                 className={classNames(
                   tab.current
                     ? "border-primary text-primary"
@@ -51,9 +52,9 @@ export default function StackedHeader({ tabs,renderButton }: { tabs: Tab[], rend
               >
                 {tab.name}
                 <span className="inline-flex items-center rounded bg-primary/30 px-2 py-0.5 text-xs font-medium text-purple-800 ml-2">
-                  0
+                  {tab.count || 0}
                 </span>
-              </a>
+              </Link>
             ))}
           </nav>
         </div>

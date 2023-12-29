@@ -1,11 +1,27 @@
-import { Fragment, useRef, useState } from 'react'
+import { Fragment, useRef, useState,useEffect} from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationTriangleIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { useMutation, useQueryClient } from 'react-query'
+import { ClipLoader } from 'react-spinners'
+import toast from 'react-hot-toast'
+import { DeleteEmployeeMutation } from '../../../utils/adminActions'
 
-export default function DeleteEmployee() {
+export default function DeleteEmployee({id}:{id:string|undefined}) {
+  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
-
+const {isLoading,isSuccess,isError,mutate:fireEmployee}= useMutation({mutationFn:DeleteEmployeeMutation,   onSuccess: () => {
+  queryClient.invalidateQueries(["get_allEmployees"]);
+},})
   const cancelButtonRef = useRef(null)
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Employee deleted successfully");
+      setOpen(false);
+    }
+    if (isError) {
+      toast.error(`Error something occured.`);
+    }
+  }, [isSuccess, isError]);
 
   return (
  <>
@@ -65,9 +81,12 @@ export default function DeleteEmployee() {
                   <button
                     type="button"
                     className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-                    onClick={() => setOpen(false)}
+                    onClick={() =>{
+                      fireEmployee(id)
+                     
+                    }}
                   >
-                    Delete
+                   {isLoading ? (<ClipLoader size={20} color='white'/>):" Delete"}
                   </button>
                   <button
                     type="button"

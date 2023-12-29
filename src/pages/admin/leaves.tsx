@@ -25,17 +25,17 @@ export default function Leaves() {
     },
     {
       name: "Approved",
-      href: "#",
+      href: "?status=Approved",
       current: false,
     },
     {
       name: "Pending",
-      href: "#",
+      href: "?status=Pending",
       current: false,
     },
     {
       name: "Rejected",
-      href: "#",
+      href: "?status=Rejected",
       current: false,
     },
   ];
@@ -109,7 +109,7 @@ export default function Leaves() {
                           <XMarkIcon className="h-4 w-4" aria-hidden="true" />
                         </button>
                      
-                        <ViewEmployeeModal />
+                       
                       </span>
                     </div>
                   </div>

@@ -19,6 +19,7 @@ interface SignUpValues {
 
 
   export type EmployeeData = {
+    id?:string
     email: string;
     firstname: string;
     lastname: string;
@@ -50,7 +51,13 @@ export const CreateEmployeeMutation= (data:EmployeeData)=>{
     'Authorization': `Bearer ${AdminToken}`
   }})
 }
- 
+
+export const DeleteEmployeeMutation= (data:string| undefined)=>{
+  return axios.delete(`${BASE_URL}/employees/left?id=${data}`,{headers:{
+    'Authorization': `Bearer ${AdminToken}`
+  }})
+}
+
 export const CreateDepartment=(data:any)=>{
   return axios.post(`${BASE_URL}/api/department/create`,data,{headers:{
     'Authorization': `Bearer ${AdminToken}`

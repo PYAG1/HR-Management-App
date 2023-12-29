@@ -47,7 +47,7 @@ export default function ViewEmployeeModal({data}:{data:EmployeeData}) {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:w-full xl:w-8/12 h-[80vh] overflow-y-auto">
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:w-full xl:w-7/12 h-max overflow-y-auto">
                   <div>
                     <div className=" ">
                       <Dialog.Title
@@ -56,7 +56,7 @@ export default function ViewEmployeeModal({data}:{data:EmployeeData}) {
                       >
                         <div className="px-4 py-6 sm:px-6">
                           <h3 className="text-base font-semibold leading-7 text-gray-900">
-                            Applicant Information
+                            Employee Information
                           </h3>
                           <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
                             Personal details and application.
@@ -159,19 +159,7 @@ export default function ViewEmployeeModal({data}:{data:EmployeeData}) {
                               </dd>
                             </div>
                             
-                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-3 sm:px-0">
-                              <dt className="text-sm font-medium leading-6 text-gray-900">
-                                About
-                              </dt>
-                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                Fugiat ipsum ipsum deserunt culpa aute sint do
-                                nostrud anim incididunt cillum culpa consequat.
-                                Excepteur qui ipsum aliquip consequat sint. Sit
-                                id mollit nulla mollit nostrud in ea officia
-                                proident. Irure nostrud pariatur mollit ad
-                                adipisicing reprehenderit deserunt qui eu.
-                              </dd>
-                            </div>
+           
                           </dl>
                         </div>
                       </div>

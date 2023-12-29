@@ -7,7 +7,7 @@ import { useFormik } from "formik";
 import TextField from "../../../core-ui/text-field";
 import * as Yup from "yup";
 import CustomSelect from "../../../core-ui/custom-select";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   CreateEmployeeMutation,
   GetAllDepartments,
@@ -76,17 +76,19 @@ export default function CreateEmployeeButton() {
 
   const cancelButtonRef = useRef(null);
   const [currentStep, setCurrentStep] = useState(0);
-
+  const queryClient = useQueryClient()
   const {
     isLoading,
     isError,
     isSuccess,
+    error,
     mutate: CreateEmployee,
   } = useMutation({
     mutationFn: CreateEmployeeMutation,
-    onSuccess: async () => {
-      await sendEmail();
-    },
+    onSuccess:()=>{
+      queryClient.invalidateQueries(["get_allEmployees"]);
+      setOpen(false);
+    }
   });
   const {
     isLoading: loading,
@@ -97,6 +99,8 @@ export default function CreateEmployeeButton() {
   const nextStep = () => {
     setCurrentStep((prevStep) => Math.min(prevStep + 1, steps.length - 1));
   };
+
+
 
   const prevStep = () => {
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
@@ -131,6 +135,7 @@ export default function CreateEmployeeButton() {
     validationSchema: validationSchemaStep0,
     onSubmit: async (values) => {
       await CreateEmployee(values);
+      formikStep0.resetForm()
     },
   });
   const form = useRef<any>();
@@ -149,11 +154,12 @@ export default function CreateEmployeeButton() {
   };
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Department created");
-      setOpen(false);
+      toast.success("Employee added successfully");
+      
     }
     if (isError) {
-      toast.error(`Error something occured.`);
+      toast.error(`${error}`);
+  
     }
   }, [isSuccess, isError]);
 
@@ -249,36 +255,36 @@ export default function CreateEmployeeButton() {
             <div className=" w-full grid grid-cols-2 gap-8">
               <div>
                 <p>FirstName:</p>
-                <p>{formikStep0.values.firstname || "Not Specified" }</p>
+                <p>{formikStep0.values.firstname || "Not Specified"}</p>
               </div>
               <div>
                 <p>LastName:</p>
-                <p>{formikStep0.values.lastname ||"Not Specified" }</p>
+                <p>{formikStep0.values.lastname || "Not Specified"}</p>
               </div>
               <div>
                 <p>Email:</p>
-                <p>{formikStep0.values.email ||"Not Specified"}</p>
+                <p>{formikStep0.values.email || "Not Specified"}</p>
               </div>
               <div>
                 <p>Contact:</p>
-                <p>{formikStep0.values.contact ||"Not Specified" }</p>
+                <p>{formikStep0.values.contact || "Not Specified"}</p>
               </div>
               <div>
                 <p>Role:</p>
-                <p>{formikStep0.values.role || "Not Specified" }</p>
+                <p>{formikStep0.values.role || "Not Specified"}</p>
               </div>
 
               <div>
                 <p>Salary:</p>
-                <p>{formikStep0.values.salary || "Not Specified" }</p>
+                <p>{formikStep0.values.salary || "Not Specified"}</p>
               </div>
               <div>
                 <p>Department:</p>
-                <p>{formikStep0.values.departmentId || "Not Specified" }</p>
+                <p>{formikStep0.values.departmentId || "Not Specified"}</p>
               </div>
               <div>
                 <p>Gender:</p>
-                <p>{formikStep0.values.gender ||"Not Specified" }</p>
+                <p>{formikStep0.values.gender || "Not Specified"}</p>
               </div>
             </div>
           </div>
