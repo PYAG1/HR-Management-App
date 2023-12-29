@@ -24,7 +24,7 @@ export default function TextAreaField({
             <div className="relative mt-1.5">
             
                 <textarea
-                    className="border w-full h-36 border-gray-300 text-base font-normal placeholder:text-gray-400 rounded-md ring-primary focus:ring-primary focus:border-primary pl-4 py-2"
+                    className="border w-full h-24 border-gray-300 text-base font-normal placeholder:text-gray-400 rounded-md ring-primary focus:ring-primary focus:border-primary pl-4 py-2"
                     id={id}
                     name={id}
                     onChange={handleChange}

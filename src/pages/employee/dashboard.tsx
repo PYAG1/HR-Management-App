@@ -1,16 +1,21 @@
 import { CalendarDaysIcon, CheckIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import { CheckBadgeIcon, CursorArrowRaysIcon, UserMinusIcon, UsersIcon } from "@heroicons/react/24/solid";
 import React from "react";
+import { useQuery } from "react-query";
+import { getSingleEmployee } from "../../utils/employeeActions";
 
 
 export default function Emdashboard() {
+  const {isLoading,isSuccess,isError,data:EmployeeData}= useQuery({queryKey:["get_single_employee"],queryFn:getSingleEmployee})
+
+ 
   const stats = [
-    { id: 1, name: 'Leave Days Remaining', stat: '71,897', icon: CalendarDaysIcon },
-    { id: 2, name: 'Leaves Accepted', stat: '58.16%', icon:CheckIcon  },
+
+    { id: 1, name: 'Leave Days Remaining', stat: `${EmployeeData?.data?.data.leaveDaysRemaining}`, icon: CalendarDaysIcon },
+    { id: 2, name: 'Leave Days Used', stat: `${EmployeeData?.data?.data.leaveDaysRemaining-30}`, icon:CheckIcon  },
     { id: 3, name: 'Leaves Rejected', stat: '24.57%', icon:XMarkIcon },
   ]
-  const firstName = "Papa";
-  const status = "active";
+
   return (
     <div className="w-full max-h-[90svh]">
       <div className=" w-full text-white bg-background h-max   rounded-xl p-5 font-[Manrope]">
@@ -26,10 +31,10 @@ export default function Emdashboard() {
           </span>
           <div className=" space-y-2">
             <p className=" md:text-3xl   font-medium ">
-              Good Morning, {firstName}
+              Good Morning, {EmployeeData?.data?.data?.firstname} {EmployeeData?.data?.data?.lastname}
             </p>{" "}
             <div>
-              {status === "active" ? (
+              {EmployeeData?.data?.data?.status === "Active" ? (
                 <span className="inline-flex items-center gap-x-1.5 rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
                   <svg
                     className="h-1.5 w-1.5 fill-green-500"
@@ -40,9 +45,19 @@ export default function Emdashboard() {
                   </svg>
                   Active
                 </span>
-              ) : (
-                <p></p>
-              )}
+              ) : EmployeeData?.data?.data?.status === "On Leave"? (
+                <span className="inline-flex items-center gap-x-1.5 rounded-md bg-red-100 px-2 py-1 text-xs font-medium text-red-700">
+                <svg className="h-1.5 w-1.5 fill-red-500" viewBox="0 0 6 6" aria-hidden="true">
+                  <circle cx={3} cy={3} r={3} />
+                </svg>
+              On Leave
+              </span>
+              ): (  <span className="inline-flex items-center gap-x-1.5 rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600">
+              <svg className="h-1.5 w-1.5 fill-gray-400" viewBox="0 0 6 6" aria-hidden="true">
+                <circle cx={3} cy={3} r={3} />
+              </svg>
+            Not Specified
+            </span>)}
             </div>
           </div>
         </div>

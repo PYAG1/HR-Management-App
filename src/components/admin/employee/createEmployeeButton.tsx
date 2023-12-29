@@ -380,7 +380,7 @@ export default function CreateEmployeeButton() {
                             : ""
                         }`}
                         onClick={async (
-                          e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+                
                         ) => {
                           formikStep0.handleSubmit();
                         }}

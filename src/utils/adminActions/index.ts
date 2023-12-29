@@ -38,6 +38,12 @@ interface SignUpValues {
     managerId: string;
   }
   
+interface manageLeaveType{
+  
+    id: string | undefined,
+    approved: boolean
+  
+  }
 
 export const signUpMutation = (data:SignUpValues) => {
     return axios.post(`${BASE_URL}/api/admin/register`, data)
@@ -65,6 +71,13 @@ export const CreateDepartment=(data:any)=>{
 }
 
 
+export const manageLeave=(data:manageLeaveType)=>{
+  return axios.patch(`${BASE_URL}/leave/manage`,data,{headers:{
+    'Authorization': `Bearer ${AdminToken}`
+  }})
+}
+
+
 
 //QUERIES
 export const GetAllDepartments=()=>{
@@ -74,6 +87,11 @@ export const GetAllDepartments=()=>{
 }
 export const GetAllEmploees=()=>{
   return axios.get(`${BASE_URL}/employees/all`,{headers:{
+    'Authorization': `Bearer ${AdminToken}`
+  }})
+}
+export const GetAllLeaveHistory=()=>{
+  return axios.get(`${BASE_URL}/leave/all`,{headers:{
     'Authorization': `Bearer ${AdminToken}`
   }})
 }

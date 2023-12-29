@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CreateDepartmentButton from "../../components/admin/departments/CreateDepartmentButton";
 import TableComponent from "../../components/TableComponent";
 import { useQuery } from "react-query";
 import { DepartmentsType, GetAllDepartments } from "../../utils/adminActions";
+import toast from "react-hot-toast";
 
 export default function Departments() {
   const {
     isLoading,
     isError,
-    isSuccess,
+  
     data: departmentData,
   } = useQuery({ queryKey: ["get_departments"], queryFn: GetAllDepartments });
-  
+  useEffect(() => {
+    if (isError) {
+      toast.error(`Error something occured.`);
+    }
+  }, [ isError]);
   return (
     <div className="w-full grid grid-cols-[400px,.7fr] gap-[10em] mt-10">
       <CreateDepartmentButton />
