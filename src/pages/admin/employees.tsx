@@ -140,7 +140,7 @@ export default function Employees() {
                     </div>
                     <div className="relative flex justify-center">
                       <span className="isolate inline-flex -space-x-px rounded-md shadow-sm">
-                        <EditEmployeeModal />
+                        <EditEmployeeModal data={person}/>
                         <ViewEmployeeModal data={person} />
                         <DeleteEmployee id={person.id} />
                       </span>

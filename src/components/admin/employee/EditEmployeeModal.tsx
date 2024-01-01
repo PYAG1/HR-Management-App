@@ -5,8 +5,9 @@ import TextField from "../../../core-ui/text-field";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import CustomSelect from "../../../core-ui/custom-select";
+import { EmployeeData } from "../../../utils/adminActions";
 
-export default function EditEmployeeModal() {
+export default function EditEmployeeModal({data}:{data:EmployeeData}) {
   const [open, setOpen] = useState(false);
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
