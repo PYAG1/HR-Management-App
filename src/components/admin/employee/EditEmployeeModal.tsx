@@ -1,15 +1,25 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon, PencilIcon } from "@heroicons/react/24/outline";
 import TextField from "../../../core-ui/text-field";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import CustomSelect from "../../../core-ui/custom-select";
-import { EmployeeData } from "../../../utils/adminActions";
+import { EmployeeData, GetAllDepartments, editEmployeeInfoAdmin } from "../../../utils/adminActions";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { ClipLoader } from "react-spinners";
+import toast from "react-hot-toast";
 
 export default function EditEmployeeModal({data}:{data:EmployeeData}) {
+  const {
+    isLoading: loading,
+    isError: Error,
+    data: departmentData,
+  } = useQuery({ queryKey: ["get_departments"], queryFn: GetAllDepartments });
+  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false);
   const validationSchema = Yup.object().shape({
+    id:Yup.string().required("id is needled here"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     firstname: Yup.string().required("First name is required"),
     lastname: Yup.string().required("Last name is required"),
@@ -18,27 +28,38 @@ export default function EditEmployeeModal({data}:{data:EmployeeData}) {
     salary: Yup.number()
       .required("Salary is required")
       .positive("Salary must be a positive number"),
-    gender: Yup.string()
-      .oneOf(["Male", "Female"], "Invalid gender")
-      .required("Gender is required"),
     contact: Yup.string().required("Contact number is required"),
   });
+  const {isLoading,isError,isSuccess,mutate,error } = useMutation({mutationFn:editEmployeeInfoAdmin,onSuccess:()=>{
+    queryClient.invalidateQueries(["get_allEmployees"]);
+  }})
   const formik = useFormik({
     initialValues: {
-      email: "",
-      firstname: "",
-      lastname: "",
-      gender: "",
-      contact: "",
-      role: "",
-      salary: "",
-      departmentId: "",
+      id:data?.id,
+      email: data?.email,
+      firstname: data?.firstname,
+      lastname: data?.lastname,
+      contact: data?.contact,
+      role: data?.role,
+      salary: data?.salary,
+      departmentId: data?.departmentId,
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log(values);
+ mutate(values)
+ setOpen(false)
     },
   });
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Employee data updated successfulyy");
+    }
+    if (isError) {
+      toast.error(`${error}`);
+    }
+  }, [isSuccess, isError]);
+
 
   return (
     <>
@@ -76,7 +97,7 @@ export default function EditEmployeeModal({data}:{data:EmployeeData}) {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:w-full xl:w-8/12 min-h-[80vh] overflow-y-auto">
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:w-full xl:w-8/12 h-max overflow-y-auto">
                   <div>
                     <Dialog.Title
                       as="h3"
@@ -148,10 +169,13 @@ export default function EditEmployeeModal({data}:{data:EmployeeData}) {
                           </div>
                           <div className="border-t border-gray-100 px-2 py-2 sm:col-span-2 sm:px-0">
                             <CustomSelect
-                              options={[
-                                { id: "Male", name: "Male" },
-                                { id: "Female", name: "Female" },
-                              ]}
+                            options={
+                              loading
+                                ? [{ id: "loading", name: "Loading..." }]
+                                : Error
+                                ? [{ id: "error", name: "Failed to Fetch" }]
+                                : departmentData?.data?.data || []
+                            }
                               id={"departmentId"}
                               label={"Department"}
                               {...formik}
@@ -159,18 +183,18 @@ export default function EditEmployeeModal({data}:{data:EmployeeData}) {
                           </div>
                         </dl>
                       </div>
-                      <div className=" px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 absolute bottom-0 right-2 w-full ">
+                      <div className=" px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 right-2 w-full ">
                         <button
                           type="button"
-                          className={`inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm ${
-                            !formik.isValid || !formik.dirty
-                              ? "cursor-not-allowed "
-                              : ""
-                          }`}
-                          onClick={() => console.log("")}
-                          disabled={!formik.isValid || !formik.dirty}
+                          className={`inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm `}
+                          onClick={() => formik.handleSubmit()}
+                         
                         >
-                          Submit
+                             {isLoading ? (
+                          <ClipLoader size={20} color="white" />
+                        ) : (
+                          "Submit"
+                        )}
                         </button>
                       </div>
                     </div>

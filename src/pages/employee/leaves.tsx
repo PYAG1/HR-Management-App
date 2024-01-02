@@ -165,8 +165,7 @@ export default function EmLeaves() {
                 </td>
               </tr>
             ));
-          }}
-        />
+          } } total={filteredLeaves.length  || 0}        />
       </div>
     </div>
   );

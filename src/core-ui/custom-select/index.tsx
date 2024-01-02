@@ -30,7 +30,7 @@ export default function CustomSelect({
               -- Select {id}
             </option>
             {options?.map((opt) => (
-              <option value={opt?.id}>{opt?.name}</option>
+              <option key={opt?.id} value={opt?.id}>{opt?.name}</option>
             ))}
           </select>
         </div>

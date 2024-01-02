@@ -7,6 +7,7 @@ interface TableComponentTypes {
   renderBody: () => ReactNode;
   loading: boolean;
   renderPagination?: () => ReactNode;
+  total:number
 }
 
 export default function TableComponent({
@@ -14,8 +15,10 @@ export default function TableComponent({
   renderBody,
   loading,
   renderPagination,
+  total
 }: TableComponentTypes) {
   const isEmpty = !loading && !renderBody();
+  console.log(renderBody())
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 h-full w-full">
@@ -53,11 +56,11 @@ export default function TableComponent({
                   <Skeleton />
                 </td>
               </tr>
-            ) : isEmpty ? (
+            ) : total === 0 ? (
               <tr>
                 <td
                   colSpan={columnTitles.length}
-                  className="py-4 pl-4 text-sm font-medium text-gray-900"
+                  className="py-4 pl-4 text-sm font-medium text-gray-900 " 
                 >
                   No data available.
                 </td>

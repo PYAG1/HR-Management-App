@@ -387,7 +387,7 @@ export default function CreateEmployeeButton() {
                         disabled={!formikStep0.isValid || !formikStep0.dirty}
                       >
                         {isLoading ? (
-                          <ClipLoader size={20} color="black" />
+                          <ClipLoader size={20} color="white" />
                         ) : (
                           "Submit"
                         )}

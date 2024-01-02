@@ -10,7 +10,7 @@ import {
   TrashIcon,
 } from "@heroicons/react/20/solid";
 import { Fragment } from "react";
-import { EyeIcon } from "@heroicons/react/24/outline";
+import { EyeIcon, MagnifyingGlassCircleIcon } from "@heroicons/react/24/outline";
 import { PencilSquareIcon } from "@heroicons/react/20/solid";
 import ViewEmployeeModal from "../../components/admin/employee/ViewEmployeeModal";
 import DeleteEmployee from "../../components/admin/employee/DeleteEmployeeModal";
@@ -28,17 +28,29 @@ export default function Employees() {
 
   const columnTitles = ["Name", "Email", "Role", "Status"];
 
+  const [search,setSearch] = useState<string>("")
   const {
     isLoading,
     isError,
     data: allEmployees,
-  } = useQuery({ queryKey: ["get_allEmployees"], queryFn: GetAllEmploees });
+  } = useQuery({ queryKey: ["get_allEmployees",2], queryFn: GetAllEmploees });
   const filteredEmployees = allEmployees?.data?.data?.filter(
     (person: EmployeeData) => {
-      if (!status) {
+      const fullName = `${person?.firstname} ${person?.lastname}`;
+
+      if (!status && !search) {
         return true;
       }
-      return person.status === status;
+
+      if (status && person.status !== status) {
+        return false;
+      }
+
+      if (search && !fullName.toLowerCase().includes(search.toLowerCase())) {
+        return false;
+      }
+
+      return true;
     }
   );
 
@@ -80,11 +92,31 @@ export default function Employees() {
         renderButton={() => <CreateEmployeeButton />}
       />
       <div className=" w-full h-full">
+      <div className="mt-6 px-4 sm:px-6 lg:px-8 relative w-[350px]">
+  <label htmlFor="account-number" className="block text-sm font-medium leading-6 text-gray-900">
+   Search by Name
+  </label>
+  <div className="relative mt-2 rounded-md shadow-sm flex items-center">
+    <input
+      type="text"
+      onChange={(e)=>setSearch(e.target.value)}
+      value={search}
+      name="account-number"
+      id="account-number"
+      className="block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+      placeholder="John Doe"
+    />
+    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+      <MagnifyingGlassCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+    </div>
+  </div>
+</div>
+
         <TableComponent
           loading={isLoading}
           columnTitles={columnTitles}
           renderBody={() => {
-            return filteredEmployees.map((person: EmployeeData) => (
+            return filteredEmployees?.map((person: EmployeeData) => (
               <tr key={person.email}>
                 <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6 ">
                   {person.firstname} {person.lastname}
@@ -140,7 +172,7 @@ export default function Employees() {
                     </div>
                     <div className="relative flex justify-center">
                       <span className="isolate inline-flex -space-x-px rounded-md shadow-sm">
-                        <EditEmployeeModal data={person}/>
+                        <EditEmployeeModal data={person} />
                         <ViewEmployeeModal data={person} />
                         <DeleteEmployee id={person.id} />
                       </span>
@@ -149,8 +181,7 @@ export default function Employees() {
                 </td>
               </tr>
             ));
-          }}
-        />
+          } } total={filteredEmployees?.length || 0}        />
       </div>
     </div>
   );

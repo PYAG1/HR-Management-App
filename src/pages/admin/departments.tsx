@@ -39,9 +39,8 @@ export default function Departments() {
               )}
             </>
           );
-        }}
-        loading={isLoading}
-      />
+        } }
+        loading={isLoading} total={departmentData?.data?.data?.length  || 0}      />
     </div>
   );
 }
