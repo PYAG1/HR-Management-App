@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import StackedHeader from "../../components/stackHeader";
 import TableComponent from "../../components/TableComponent";
 
@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 import ViewAllLeavesModal from "../../components/admin/leaves/ViewAllLeaves";
 import AcceptLeave from "../../components/admin/leaves/AcceptLeave";
 import RejectLeave from "../../components/admin/leaves/RejectLeave";
+import SearchInput from "../../components/SearchInput";
 
 export default function Leaves() {
   const location = useLocation();
@@ -59,15 +60,25 @@ export default function Leaves() {
   ];
 
   const columnTitles = ["Name", "Duration", "Leave Type", "Status"];
-
-  const filteredLeaves = AllLeaveHistory?.data?.data?.filter(
-    (leave: LeaveType) => {
-      if (!status) {
-        return true;
-      }
-      return leave.status === status;
+  const [search,setSearch] = useState<string>("")
+  const filteredLeaves = AllLeaveHistory?.data?.data?.filter((leave: LeaveType) => {
+    const fullName = `${leave?.employee?.firstname} ${leave?.employee?.lastname}`;
+  
+    if (!status && !search) {
+      return true;
     }
-  );
+  
+    if (status && leave.status !== status) {
+      return false;
+    }
+  
+    if (search && !fullName.toLowerCase().includes(search.toLowerCase())) {
+      return false;
+    }
+  
+    return true;
+  });
+  
 
   useEffect(() => {
     if (isError) {
@@ -79,6 +90,8 @@ export default function Leaves() {
       <StackedHeader tabs={tabs} />
       <div className=" w-full h-full">
         <p className=" text-xl font-medium my-3">History</p>
+
+        <SearchInput search={search} setSearch={setSearch}/>
         <TableComponent
           loading={isLoading}
           columnTitles={columnTitles}
@@ -151,8 +164,8 @@ export default function Leaves() {
                     </div>
                     <div className="relative flex justify-center">
                       <span className="isolate inline-flex -space-x-px rounded-md shadow-sm">
-                        <AcceptLeave id={leave?.id}/>
-           <RejectLeave  id={leave?.id}/>
+                        <AcceptLeave id={leave?.id} />
+                        <RejectLeave id={leave?.id} />
                         <ViewAllLeavesModal data={leave} />
                       </span>
                     </div>
@@ -160,8 +173,7 @@ export default function Leaves() {
                 </td>
               </tr>
             ));
-          }}
-        />
+          } } total={filteredLeaves?.length || 0}        />
       </div>
     </div>
   );

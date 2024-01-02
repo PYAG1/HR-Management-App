@@ -91,7 +91,7 @@ export default function EmLeaves() {
           loading={isLoading}
           columnTitles={columnTitles}
           renderBody={() => {
-            return filteredLeaves.map((leave: LeaveType) => (
+            return filteredLeaves?.map((leave: LeaveType) => (
               <tr key={leave.id}>
                 <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
                   {formatDate(leave.startDate)}
@@ -165,7 +165,7 @@ export default function EmLeaves() {
                 </td>
               </tr>
             ));
-          } } total={filteredLeaves.length  || 0}        />
+          } } total={filteredLeaves?.length  || 0}        />
       </div>
     </div>
   );
