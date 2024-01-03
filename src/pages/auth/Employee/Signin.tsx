@@ -28,6 +28,7 @@ function EmployeeSignin() {
   useEffect(() => {
     if (isSuccess) {
       toast.success("Signed in");
+      console.log(data?.data)
       localStorage.setItem("employee-token",data.data?.token)
       navigate("/employee/dashboard");
     }

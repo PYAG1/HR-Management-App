@@ -1,16 +1,16 @@
-import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
+  ArrowRightStartOnRectangleIcon,
   Bars3Icon,
-  CalendarIcon,
   ChartBarIcon,
   HomeIcon,
-  UsersIcon,
-  XMarkIcon,
-  BuildingOffice2Icon,
+  XMarkIcon
 } from "@heroicons/react/24/outline";
+import { Fragment, useState } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
+import { useHrAppContext } from "../../context";
 import { extractPageTitle } from "../../utils";
+import LogoutNotification from "../../components/Logout";
 
 const navigation = [
   {
@@ -33,25 +33,18 @@ function classNames(...classes: string[]) {
 export default function EmployeeLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
-
+ // const {isLoading,isSuccess,isError,data:EmployeeData}= useQuery({queryKey:["get_single_employee"],queryFn:getSingleEmployee})
   const pageTitle = extractPageTitle(location.pathname);
 
-  // Update the 'current' property based on the current route
+
   const updatedNavigation = navigation.map((item) => ({
     ...item,
     current: item.href === location.pathname,
   }));
-
+const {employeeName,showNotification,setShowNotification} = useHrAppContext()
   return (
     <>
-      {/*
-        This example requires updating your template:
 
-        ```
-        <html class="h-full bg-gray-100">
-        <body class="h-full">
-        ```
-      */}
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -139,7 +132,7 @@ export default function EmployeeLayout() {
                     </nav>
                   </div>
                   <div className="flex flex-shrink-0 bg-gray-700 p-4">
-                    <a href="#" className="group block flex-shrink-0">
+                    <div className="group justify-between flex items-center  w-full flex-shrink-0">
                       <div className="flex items-center">
                         <div>
                           <img
@@ -150,14 +143,21 @@ export default function EmployeeLayout() {
                         </div>
                         <div className="ml-3">
                           <p className="text-base font-medium text-white">
-                            Tom Cook
+                            {employeeName}
                           </p>
                           <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">
                             View profile
                           </p>
                         </div>
+                    
                       </div>
-                    </a>
+                      <button title="logout" onClick={()=> {
+                        setShowNotification(true)
+                        setSidebarOpen(false)
+                      }}>
+              <ArrowRightStartOnRectangleIcon className=" w-5 h-5 text-white"/>
+              </button>
+                    </div>
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
@@ -170,7 +170,7 @@ export default function EmployeeLayout() {
 
         {/* Static sidebar for desktop */}
         <div className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
-          {/* Sidebar component, swap this element with another sidebar if you like */}
+         
           <div className="flex min-h-0 flex-1 flex-col bg-gray-800">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
               <div className="flex flex-shrink-0 items-center px-4">
@@ -205,24 +205,30 @@ export default function EmployeeLayout() {
                 ))}
               </nav>
             </div>
-            <div className="flex flex-shrink-0 bg-gray-700 p-4">
-              <a href="#" className="group block w-full flex-shrink-0">
-                <div className="flex items-center">
-                  <div>
-                    <img
-                      className="inline-block h-9 w-9 rounded-full"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      alt=""
-                    />
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm font-medium text-white">Tom Cook</p>
-                    <p className="text-xs font-medium text-gray-300 group-hover:text-gray-200">
-                      View profile
-                    </p>
-                  </div>
-                </div>
-              </a>
+            <div className="flex flex-shrink-0 bg-gray-700 p-4 ">
+            <div className="group justify-between flex items-center  w-full flex-shrink-0">
+                      <div className="flex items-center">
+                        <div>
+                          <img
+                            className="inline-block h-10 w-10 rounded-full"
+                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                            alt=""
+                          />
+                        </div>
+                        <div className="ml-3">
+                          <p className="text-base font-medium text-white">
+                            {employeeName}
+                          </p>
+                          <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">
+                            View profile
+                          </p>
+                        </div>
+                       
+                      </div>
+                      <button title="logout" onClick={()=> setShowNotification(true)}>
+              <ArrowRightStartOnRectangleIcon className=" w-5 h-5 text-white"/>
+              </button>
+                    </div>
             </div>
           </div>
         </div>
@@ -230,25 +236,30 @@ export default function EmployeeLayout() {
           <div className="sticky top-0 z-10 bg-gray-100 pl-1 pt-1 sm:pl-3 sm:pt-3 md:hidden">
             <button
               type="button"
-              className="-ml-0.5 -mt-0.5 inline-flex h-12 w-12 items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+              className="hidden -ml-0.5 -mt-0.5  h-12 w-12 items-center justify-center rounded-md text-gray-500 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
-          <main className="flex-1">
+          <main className="hidden xl:contents lg:flex-1">
             <div className="py-6">
               <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <h1 className="text-2xl font-semibold text-gray-900 mb-2">
                   {pageTitle}
                 </h1>
               </div>
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 relative">
                 <Outlet />
+                <LogoutNotification show={showNotification} setShow={setShowNotification} name={employeeName}/>
               </div>
             </div>
           </main>
+          <div className=" w-full h-screen flex flex-col justify-center items-center xl:hidden">
+            <p>Please use a desktop</p>
+
+          </div>
         </div>
       </div>
     </>

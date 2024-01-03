@@ -1,28 +1,13 @@
-import React, { useEffect } from "react";
-import StackedHeader from "../../components/stackHeader";
-import TableComponent from "../../components/TableComponent";
-import { Popover, Transition } from "@headlessui/react";
-import {
-  ChatBubbleBottomCenterTextIcon,
-  ChevronDownIcon,
-  PaperClipIcon,
-  PencilIcon,
-  TrashIcon,
-  XMarkIcon,
-} from "@heroicons/react/20/solid";
-import { Fragment } from "react";
-import { CheckCircleIcon, EyeIcon } from "@heroicons/react/24/outline";
-import { PencilSquareIcon } from "@heroicons/react/20/solid";
-import ViewEmployeeModal from "../../components/admin/employee/ViewEmployeeModal";
-import DeleteEmployee from "../../components/admin/employee/DeleteEmployeeModal";
-import CreateEmployeeButton from "../../components/admin/employee/createEmployeeButton";
-import CreateLeaveButton from "../../components/employee/leaves/createLeaveButton";
-import LeaveDetailsModal from "../../components/employee/leaves/ViewLeaveModal";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
-import { LeaveType, getEmpLeaveHistory } from "../../utils/employeeActions";
-import { formatDate } from "../../utils";
 import { useLocation } from "react-router-dom";
+import TableComponent from "../../components/TableComponent";
+import LeaveDetailsModal from "../../components/employee/leaves/ViewLeaveModal";
+import CreateLeaveButton from "../../components/employee/leaves/createLeaveButton";
+import StackedHeader from "../../components/stackHeader";
+import { formatDate } from "../../utils";
+import { LeaveType, getEmpLeaveHistory } from "../../utils/employeeActions";
 
 export default function EmLeaves() {
   const location = useLocation();
@@ -31,7 +16,6 @@ export default function EmLeaves() {
   const {
     isLoading,
     isError,
-    isSuccess,
     data: LeaveHistory,
   } = useQuery({queryKey:["getEmpLeaveHistory"], queryFn: getEmpLeaveHistory });
   const tabs = [
@@ -96,7 +80,7 @@ export default function EmLeaves() {
                 <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
                   {formatDate(leave.startDate)}
                   <dl className="font-normal lg:hidden">
-                    <dt className="sr-only">Start Date</dt>
+                    <dt className="sr-only">Duration</dt>
                     <dd className="mt-1 truncate text-gray-700">
                       {formatDate(leave.startDate)}
                     </dd>
