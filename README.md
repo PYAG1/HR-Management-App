@@ -2,6 +2,7 @@ This is actually a V2 our software engineering mini project.
 
 FrontEnd: PYAG1 ,
 BackEnd: https://github.com/frimpsss
+NB: For desktop screens
 
 
 
