@@ -1,20 +1,20 @@
-import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
-import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import emailjs, { sendForm } from "@emailjs/browser";
+import emailjs from "@emailjs/browser";
+import { XMarkIcon } from "@heroicons/react/24/solid";
 import { useFormik } from "formik";
-import TextField from "../../../core-ui/text-field";
+import toast from "react-hot-toast";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { ClipLoader } from "react-spinners";
 import * as Yup from "yup";
 import CustomSelect from "../../../core-ui/custom-select";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import TextField from "../../../core-ui/text-field";
+import { EMAILJS_KEY, SERVICE_KEY, TEMP_KEY, generatePwd } from "../../../utils";
 import {
   CreateEmployeeMutation,
   GetAllDepartments,
 } from "../../../utils/adminActions";
-import { ClipLoader } from "react-spinners";
-import toast from "react-hot-toast";
-import { EMAILJS_KEY, SERVICE_KEY, TEMP_KEY, generatePwd } from "../../../utils";
 
 const steps = [
   { id: "01", name: "Applicant details", href: "#", status: "current" },

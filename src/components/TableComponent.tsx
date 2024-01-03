@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
@@ -17,7 +17,7 @@ export default function TableComponent({
   renderPagination,
   total
 }: TableComponentTypes) {
-  const isEmpty = !loading && !renderBody();
+
 
 
   return (

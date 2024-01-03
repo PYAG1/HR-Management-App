@@ -3,16 +3,16 @@ import { useEffect } from 'react'
 import { CursorArrowRaysIcon, UserMinusIcon, UsersIcon } from '@heroicons/react/24/outline'
 import toast from 'react-hot-toast'
 import { useQuery } from 'react-query'
+import { Link } from "react-router-dom"
 import { PuffLoader } from "react-spinners"
 import { GetStats } from '../../utils/adminActions'
 import { getTimeOfDay } from '../../utils/getTimeOfDay'
-import {Link} from "react-router-dom"
 
 
 
 
 export default function Dashboard() {
-const {isError,isFetching,isSuccess,data,isLoading}= useQuery({queryKey:["get_stat"],queryFn:GetStats})
+const {isError,data,isLoading}= useQuery({queryKey:["get_stat"],queryFn:GetStats})
 
 
 useEffect(() => {

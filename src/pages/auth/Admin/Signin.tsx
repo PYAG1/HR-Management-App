@@ -1,12 +1,12 @@
-import TextField from "../../../core-ui/text-field";
-import { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import * as Y from "yup"
-import { BeatLoader } from "react-spinners";
-import { Link, useNavigate } from "react-router-dom";
-import { useMutation } from "react-query";
-import { adminSignInMutation } from "../../../utils/adminActions";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
+import { useMutation } from "react-query";
+import { Link, useNavigate } from "react-router-dom";
+import { BeatLoader } from "react-spinners";
+import * as Y from "yup";
+import TextField from "../../../core-ui/text-field";
+import { adminSignInMutation } from "../../../utils/adminActions";
 
 
 function AdminSignin() {
@@ -75,9 +75,12 @@ function AdminSignin() {
                   {isLoading ? <BeatLoader size={8} color={"black"} /> : "Sign in"}
                 </button>
                 <div className="flex items-center justify-end">
-                  <div className="text-sm flex justify-end leading-6">
+                  <div className="text-sm flex justify-between leading-6 w-full">
+                  <button className="underline manrope text-[#4c4c4c]   hover:text-primary">
+                      <Link to="/">Back to main</Link>
+                    </button>
                     <button className="underline manrope text-[#4c4c4c]   hover:text-primary">
-                      <Link to="/auth/register">Dont have an account?</Link>
+                      <Link to="/auth/admin/register">Dont have an account?</Link>
                     </button>
                   </div>
                 </div>

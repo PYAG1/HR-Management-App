@@ -1,13 +1,13 @@
-import TextField from "../../../core-ui/text-field";
-import { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import * as Y from "yup"
-import { BeatLoader } from "react-spinners";
-import { Link, useNavigate } from "react-router-dom";
-import { useMutation } from "react-query";
-import { EmployeeSignInMutation } from "../../../utils/employeeActions";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
-
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
+import { BeatLoader } from "react-spinners";
+import * as Y from "yup";
+import TextField from "../../../core-ui/text-field";
+import { EmployeeSignInMutation } from "../../../utils/employeeActions";
+import {Link} from "react-router-dom"
 
 function EmployeeSignin() {
 
@@ -81,9 +81,15 @@ function EmployeeSignin() {
             </div>
           </div>
         </div>
+        <div className="text-sm flex justify-between leading-6 w-full">
+                  <button className="underline manrope text-[#4c4c4c]   hover:text-primary">
+                      <Link to="/">Back to main</Link>
+                    </button>
+                    </div>
         <div className="mt-16 lg:mt-0">
+      
           <p className="font-manrope text-gray-500 text-sm text-center">
-            All rights reserved, {new Date().getFullYear()}. Powered by 
+            All rights reserved, {new Date().getFullYear()}. Powered by PYAG & Frimps
           </p>
         </div>
       </div>

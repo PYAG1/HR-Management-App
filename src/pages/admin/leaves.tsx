@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react";
-import StackedHeader from "../../components/stackHeader";
+import { useEffect, useState } from "react";
 import TableComponent from "../../components/TableComponent";
+import StackedHeader from "../../components/stackHeader";
 
-import { XMarkIcon } from "@heroicons/react/20/solid";
-import { GetAllLeaveHistory } from "../../utils/adminActions";
-import { LeaveType } from "../../utils/employeeActions";
-import { useQuery } from "react-query";
 import toast from "react-hot-toast";
+import { useQuery } from "react-query";
 import { useLocation } from "react-router-dom";
-import ViewAllLeavesModal from "../../components/admin/leaves/ViewAllLeaves";
+import SearchInput from "../../components/SearchInput";
 import AcceptLeave from "../../components/admin/leaves/AcceptLeave";
 import RejectLeave from "../../components/admin/leaves/RejectLeave";
-import SearchInput from "../../components/SearchInput";
+import ViewAllLeavesModal from "../../components/admin/leaves/ViewAllLeaves";
+import { GetAllLeaveHistory } from "../../utils/adminActions";
+import { LeaveType } from "../../utils/employeeActions";
 
 export default function Leaves() {
   const location = useLocation();
@@ -20,7 +19,6 @@ export default function Leaves() {
   const {
     isLoading,
     isError,
-    isSuccess,
     isFetching,
     data: AllLeaveHistory,
   } = useQuery({
