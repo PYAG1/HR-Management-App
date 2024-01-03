@@ -16,7 +16,7 @@ Main Branch contains base UI without integration.
 
 
 
-Current Url: 
+Current Url: `````````````
 Old Url : https://humanresource5.vercel.app/
 
 ADMIN FUNCTIONALITIES
@@ -27,9 +27,8 @@ ADMIN FUNCTIONALITIES
 . Adding new Departments
 
 EMPLOYEE FUNCTIONALITIES
-. Access your information 
-. Edit some personal info 
+. Access your information           
+. Edit some personal info
 . Request for leaves
 . View leave history
 
-Not Completed
