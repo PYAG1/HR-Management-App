@@ -4,7 +4,7 @@ import { BASE_URL } from "..";
 import { useNavigate } from "react-router-dom";
 
 
-export const AdminToken = localStorage.getItem("admin-token")
+ const AdminToken = localStorage.getItem("admin-token")
 
 interface SignUpValues {
   email: string;
@@ -100,8 +100,8 @@ export const GetAllDepartments = () => {
     }
   })
 }
-export const GetAllEmploees = () => {
-  return axios.get(`${BASE_URL}/employees/all`, {
+export const GetAllEmploees = (page:any) => {
+  return axios.get(`${BASE_URL}/employees/all?page=${page}`, {
     headers: {
       'Authorization': `Bearer ${AdminToken}`
     }
@@ -109,6 +109,13 @@ export const GetAllEmploees = () => {
 }
 export const GetAllLeaveHistory = () => {
   return axios.get(`${BASE_URL}/leave/all`, {
+    headers: {
+      'Authorization': `Bearer ${AdminToken}`
+    }
+  })
+}
+export const GetStats = () => {
+  return axios.get(`${BASE_URL}/employees/stats`, {
     headers: {
       'Authorization': `Bearer ${AdminToken}`
     }

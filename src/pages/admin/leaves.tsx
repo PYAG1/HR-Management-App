@@ -21,6 +21,7 @@ export default function Leaves() {
     isLoading,
     isError,
     isSuccess,
+    isFetching,
     data: AllLeaveHistory,
   } = useQuery({
     queryKey: ["getAllEmpLeaveHistory"],
@@ -93,7 +94,7 @@ export default function Leaves() {
 
         <SearchInput search={search} setSearch={setSearch}/>
         <TableComponent
-          loading={isLoading}
+          loading={isLoading || isFetching}
           columnTitles={columnTitles}
           renderBody={() => {
             return filteredLeaves?.map((leave: LeaveType) => (

@@ -70,6 +70,7 @@ export default function TableComponent({
             )}
           </tbody>
         </table>
+        {renderPagination && renderPagination()}
       </div>
     </div>
   );
