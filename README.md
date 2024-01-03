@@ -2,6 +2,7 @@ This is actually a V2 our software engineering mini project.
 
 FrontEnd: PYAG1 ,
 BackEnd: https://github.com/frimpsss
+NB: For desktop screens
 
 
 
@@ -16,7 +17,7 @@ Main Branch contains base UI without integration.
 
 
 
-Current Url: `````````````
+Current Url: https://hrxpert.vercel.app/
 Old Url : https://humanresource5.vercel.app/
 
 ADMIN FUNCTIONALITIES
