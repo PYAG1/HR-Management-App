@@ -1,4 +1,5 @@
 import { ChevronDownIcon, ArrowRightIcon } from "@heroicons/react/20/solid";
+import { Link } from 'react-router-dom';
 import { useState } from "react";
 const NavItem = ({
   name,
@@ -34,13 +35,14 @@ const NavItem = ({
         <div className="absolute bg-white rounded-[1rem] p-2 min-w-[210%] mt-2 cursor-pointer z-[10000] ">
           {children.map((elem, inx) => {
             return (
-              <div
+              <Link
+              to={elem.link}
                 key={inx}
                 className="cursor-pointer hover:bg-[#f5f2ff] p-2 rounded-lg grid grid-cols-2 items-center"
               >
                 <p className="font-[300] text-[0.85rem] text-left justify-self-start">{elem.name}</p>
                 <ArrowRightIcon className="h-4 justify-self-end" />
-              </div>
+              </Link>
             );
           })}
         </div>
