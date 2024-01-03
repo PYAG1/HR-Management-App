@@ -29,7 +29,7 @@ function App() {
      
         {
           name: "Recruitment Management",
-          link: "/admin/employee",
+          link: "/admin/employees",
         },
         {
           name: "Department Management",
