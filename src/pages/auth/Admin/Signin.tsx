@@ -90,7 +90,7 @@ function AdminSignin() {
         </div>
         <div className="mt-16 lg:mt-0">
           <p className="font-manrope text-gray-500 text-sm text-center">
-            All rights reserved, {new Date().getFullYear()}. Powered by 
+            All rights reserved, {new Date().getFullYear()}. Powered by PYAG & Frimps
           </p>
         </div>
       </div>
