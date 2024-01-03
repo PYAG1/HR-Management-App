@@ -22,8 +22,9 @@ interface SigninValues{
         employee?:EmployeeData
       }
       
-  
- export const EmployeeToken = localStorage.getItem("employee-token")
+
+const EmployeeToken = localStorage.getItem("employee-token")
+
 
 export const EmployeeSignInMutation= (data:SigninValues)=>{
     return axios.post(`${BASE_URL}/api/employee/login`, data)
