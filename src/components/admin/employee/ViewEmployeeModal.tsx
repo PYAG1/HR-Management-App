@@ -6,8 +6,9 @@ import {
   EyeIcon,
   PaperClipIcon,
 } from "@heroicons/react/24/outline";
+import { EmployeeData } from "../../../utils/adminActions";
 
-export default function ViewEmployeeModal() {
+export default function ViewEmployeeModal({data}:{data:EmployeeData}) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -46,7 +47,7 @@ export default function ViewEmployeeModal() {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:w-full xl:w-8/12 h-[80vh] overflow-y-auto">
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:w-full xl:w-7/12 h-max overflow-y-auto">
                   <div>
                     <div className=" ">
                       <Dialog.Title
@@ -55,7 +56,7 @@ export default function ViewEmployeeModal() {
                       >
                         <div className="px-4 py-6 sm:px-6">
                           <h3 className="text-base font-semibold leading-7 text-gray-900">
-                            Applicant Information
+                            Employee Information
                           </h3>
                           <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
                             Personal details and application.
@@ -72,21 +73,21 @@ export default function ViewEmployeeModal() {
                       </Dialog.Title>
                       <div className="mt-2">
                         <div className="overflow-hidden bg-white shadow sm:rounded-lg">
-                          <dl className="grid grid-cols-1 sm:grid-cols-2 divide-y divide-gray-100 p-4">
+                          <dl className="grid grid-cols-1 sm:grid-cols-3 divide-y divide-gray-100 p-4">
                             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
                               <dt className="text-sm font-medium leading-6 text-gray-900">
                                 Full name
                               </dt>
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                Margot Foster
+                               {data.firstname} {data.lastname}
                               </dd>
                             </div>
                             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
                               <dt className="text-sm font-medium leading-6 text-gray-900">
-                                Application for
+                            Role
                               </dt>
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                Backend Developer
+                                {data.role}
                               </dd>
                             </div>
                             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -94,7 +95,7 @@ export default function ViewEmployeeModal() {
                                 Email address
                               </dt>
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                margotfoster@example.com
+                            {data.email}
                               </dd>
                             </div>
                             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -102,22 +103,63 @@ export default function ViewEmployeeModal() {
                                 Salary expectation
                               </dt>
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                $120,000
+                               Ghc {data.salary}.00
                               </dd>
                             </div>
-                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-2 sm:px-0">
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
                               <dt className="text-sm font-medium leading-6 text-gray-900">
-                                About
+                                Contact
                               </dt>
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                Fugiat ipsum ipsum deserunt culpa aute sint do
-                                nostrud anim incididunt cillum culpa consequat.
-                                Excepteur qui ipsum aliquip consequat sint. Sit
-                                id mollit nulla mollit nostrud in ea officia
-                                proident. Irure nostrud pariatur mollit ad
-                                adipisicing reprehenderit deserunt qui eu.
+                              {data.contact}
                               </dd>
                             </div>
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                              <dt className="text-sm font-medium leading-6 text-gray-900">
+                                Gender
+                              </dt>
+                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                              {data.gender}
+                              </dd>
+                            </div>
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                              <dt className="text-sm font-medium leading-6 text-gray-900">
+                                Department
+                              </dt>
+                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                              {data.gender}
+                              </dd>
+                            </div>
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                              <dt className="text-sm font-medium leading-6 text-gray-900">
+                               Leaves Days Left
+                              </dt>
+                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                              {data.leaveDaysRemaining}
+                              </dd>
+                            </div>
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                              <dt className="text-sm font-medium leading-6 text-gray-900">
+                               Status
+                              </dt>
+                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                               {
+                                data.status === "Active" ? (      <span className="inline-flex items-center gap-x-1.5 rounded-md bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
+                                <svg className="h-1.5 w-1.5 fill-green-500" viewBox="0 0 6 6" aria-hidden="true">
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                active
+                              </span>): (      <span className="inline-flex items-center gap-x-1.5 rounded-md bg-red-100 px-2 py-1 text-xs font-medium text-red-700">
+                                <svg className="h-1.5 w-1.5 fill-red-500" viewBox="0 0 6 6" aria-hidden="true">
+                                  <circle cx={3} cy={3} r={3} />
+                                </svg>
+                                Badge
+                              </span>)
+                               }
+                              </dd>
+                            </div>
+                            
+           
                           </dl>
                         </div>
                       </div>

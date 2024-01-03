@@ -13,6 +13,10 @@ import Leaves from "../pages/admin/leaves";
 import EmployeeLayout from "../layouts/dashboard/EmployeeLayout";
 import Emdashboard from "../pages/employee/dashboard";
 import EmLeaves from "../pages/employee/leaves";
+import ProtectedRoute from "../utils/ProtectedRoute";
+
+const admin = localStorage.getItem("admin-token");
+const employee = localStorage.getItem("employee-token");
 export const router = createBrowserRouter([
   {
     path: "/auth/",
@@ -20,15 +24,15 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "admin/login",
-        element: <AdminSignin/>,
+        element: <AdminSignin />,
       },
       {
         path: "admin/register",
-        element: <AdminSignup/>,
+        element: <AdminSignup />,
       },
       {
         path: "employee/login",
-        element: <EmployeeSignin/>,
+        element: <EmployeeSignin />,
       },
     ],
   },
@@ -43,39 +47,47 @@ export const router = createBrowserRouter([
 
   {
     path: "/admin/",
-    element: <AdminLayout/>,
+    element: (
+      <ProtectedRoute user={admin} redirectPath={"/auth/admin/login"}>
+        <AdminLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: "dashboard",
-        element: <Dashboard/>,
+        element: <Dashboard />,
       },
       {
         path: "employees",
-        element:<Employees/>,
+        element: <Employees />,
       },
       {
         path: "departments",
-        element: <Departments/>,
+        element: <Departments />,
       },
       {
         path: "leaves",
-        element: <Leaves/>,
+        element: <Leaves />,
       },
     ],
   },
   {
     path: "/employee/",
-    element: <EmployeeLayout/>,
+    element: (
+      <ProtectedRoute user={employee} redirectPath={"/auth/employee/login"}>
+        <EmployeeLayout />
+      </ProtectedRoute>
+    ),
+
     children: [
       {
         path: "dashboard",
-        element: <Emdashboard/>,
+        element: <Emdashboard />,
       },
 
- 
       {
         path: "leaves",
-        element: <EmLeaves/>,
+        element: <EmLeaves />,
       },
     ],
   },

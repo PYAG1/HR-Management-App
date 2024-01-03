@@ -10,6 +10,7 @@ export default function TextField({
     label,
     type,
     placeholder,
+    readonly
   }: TextFieldTypes) {
     return (
       <div className="flex flex-col gap-y-1">
@@ -26,6 +27,7 @@ export default function TextField({
             onBlur={handleBlur}
             value={values[id]}
             placeholder={placeholder}
+            readOnly={readonly}
           />
           {errors[id] && touched[id] && (
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">

@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 function AdminSignin() {
  
   const navigate = useNavigate();
- const {mutate:signIn,data,isError,isLoading,isSuccess} = useMutation({mutationFn:adminSignInMutation})
+ const {mutate:signIn,data,isError,isLoading,isSuccess,error} = useMutation({mutationFn:adminSignInMutation})
 
   const formik = useFormik({
     initialValues: { email: "", password: ""},
@@ -27,12 +27,12 @@ function AdminSignin() {
   });
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Account created");
+      toast.success("Signed In");
       localStorage.setItem("admin-token",data.data?.token)
       navigate("/admin/dashboard");
     }
     if (isError) {
-      toast.error(`Manager already exists.`);
+      toast.error(`${error}`);
     }
   }, [isSuccess, isError]);
   return  (
@@ -77,7 +77,7 @@ function AdminSignin() {
                 <div className="flex items-center justify-end">
                   <div className="text-sm flex justify-end leading-6">
                     <button className="underline manrope text-[#4c4c4c]   hover:text-primary">
-                      <Link to="/auth/register">Have an account?</Link>
+                      <Link to="/auth/register">Dont have an account?</Link>
                     </button>
                   </div>
                 </div>

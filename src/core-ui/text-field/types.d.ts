@@ -8,4 +8,5 @@ export interface TextFieldTypes {
     handleBlur: any;
     placeholder: string;
     label: string;
+    readonly?:boolean
   }

@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -7,13 +7,17 @@ import TextField from "../../../core-ui/text-field";
 import * as Yup from "yup";
 import CustomSelect from "../../../core-ui/custom-select";
 import TextAreaField from "../../../core-ui/text-area";
+import { useMutation, useQueryClient } from "react-query";
+import { requestLeave } from "../../../utils/employeeActions";
+import toast from "react-hot-toast";
+import { ClipLoader } from "react-spinners";
 
 const steps = [
   { id: "01", name: "Applicant details", href: "#", status: "current" },
   { id: "02", name: "Preview", href: "#", status: "upcoming" },
 ];
 
-function Steps({ currentStep }: {currentStep: number }) {
+function Steps({ currentStep }: { currentStep: number }) {
   const stackHeaders = steps.map((step, index) => ({
     id: step.id,
     name: step.name,
@@ -63,7 +67,7 @@ function Steps({ currentStep }: {currentStep: number }) {
 
 export default function CreateLeaveButton() {
   const [open, setOpen] = useState(false);
-
+  const queryClient = useQueryClient();
   const cancelButtonRef = useRef(null);
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -75,39 +79,47 @@ export default function CreateLeaveButton() {
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
   };
   const validationSchemaStep0 = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Email is required'),
-    firstname: Yup.string().required('First name is required'),
-    lastname: Yup.string().required('Last name is required'),
-    departmentId: Yup.string().required('Department ID is required'),
-    role: Yup.string().required('Role is required'),
-    salary: Yup.number().required('Salary is required').positive('Salary must be a positive number'),
-    gender: Yup.string().oneOf(['Male', 'Female'], 'Invalid gender').required('Gender is required'),
-    contact: Yup.string().required('Contact number is required'),
+    startDate: Yup.date().required("Start Date is required"),
+    endDate: Yup.date().required("End Date is required"),
+    leaveType: Yup.string().required("Leave Type is required"),
+    reason: Yup.string().required("Reason is required"),
   });
+  const { mutate, isLoading, isSuccess, isError, error } = useMutation({
+    mutationFn: requestLeave,
+    onSuccess: () => {
+      formik.resetForm();
+      setOpen(false);
+      queryClient.invalidateQueries(["getEmpLeaveHistory"]);
+    },
+  })
 
-  const formikStep0 = useFormik({
+  const formik = useFormik({
     initialValues: {
       startDate: "",
       endDate: "",
       leaveType: "",
       reason: "",
-   
-      
     },
     validationSchema: validationSchemaStep0,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      mutate(values);
     },
   });
 
-
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Leave request sent");
+    }
+    if (isError) {
+      toast.error(`${error}`);
+    }
+  }, [isSuccess, isError]);
 
   const renderData = () => {
     switch (currentStep) {
       case 0:
         return (
           <div className="w-full space-y-4 gap-5">
-
             <CustomSelect
               options={[
                 { id: "BEAVEMENT", name: "Bereavement" },
@@ -116,92 +128,76 @@ export default function CreateLeaveButton() {
               ]}
               id={"leaveType"}
               label={"Leave Type"}
-              {...formikStep0}
+              {...formik}
             />
             <div className=" w-full grid grid-cols-2 gap-5 ">
-            <div className=" w-full flex flex-col gap-3 lg:gap-2">
-                  <label htmlFor="startDate" className=" text-base">
-                    Start Date
-                  </label>
-                  <input
-                    name="startDate"
-                    type="date"
-                    value={formikStep0.values.startDate}
-                    onChange={formikStep0.handleChange}
-                    className=" min-w-[80px] outline-none border-[#000]/25 border-[1px] px-3 py-1 rounded focus:border-[#AFDBF5]     text-black"
-                  />
-                  {formikStep0.errors.startDate && (
-                    <p className="text-[#EF0107] font-[300] text-[0.8rem]">
-                      *{formikStep0.errors.startDate}
-                    </p>
-                  )}
-                </div>
-                <div className=" w-full flex flex-col gap-3 lg:gap-2">
-                  <label htmlFor="endDate" className=" text-base">
-                    End Date
-                  </label>
-                  <input
-                    name="endDate"
-                    type="date"
-                    value={formikStep0.values.endDate}
-                    onChange={formikStep0.handleChange}
-                    className=" min-w-[80px] outline-none border-[#000]/25 border-[1px] px-3 py-1 rounded focus:border-[#AFDBF5]     text-black"
-                  />
-                  {formikStep0.errors.endDate && (
-                    <p className="text-[#EF0107] font-[300] text-[0.8rem]">
-                      *{formikStep0.errors.endDate}
-                    </p>
-                  )}
-                </div>
+              <div className=" w-full flex flex-col gap-3 lg:gap-2">
+                <label htmlFor="startDate" className=" text-base">
+                  Start Date
+                </label>
+                <input
+                  name="startDate"
+                  type="date"
+                  value={formik.values.startDate}
+                  onChange={formik.handleChange}
+                  className=" min-w-[80px] outline-none border-[#000]/25 border-[1px] px-3 py-1 rounded focus:border-[#AFDBF5]     text-black"
+                />
+                {formik.errors.startDate && (
+                  <p className="text-[#EF0107] font-[300] text-[0.8rem]">
+                    *{formik.errors.startDate}
+                  </p>
+                )}
+              </div>
+              <div className=" w-full flex flex-col gap-3 lg:gap-2">
+                <label htmlFor="endDate" className=" text-base">
+                  End Date
+                </label>
+                <input
+                  name="endDate"
+                  type="date"
+                  value={formik.values.endDate}
+                  onChange={formik.handleChange}
+                  className=" min-w-[80px] outline-none border-[#000]/25 border-[1px] px-3 py-1 rounded focus:border-[#AFDBF5]     text-black"
+                />
+                {formik.errors.endDate && (
+                  <p className="text-[#EF0107] font-[300] text-[0.8rem]">
+                    *{formik.errors.endDate}
+                  </p>
+                )}
+              </div>
             </div>
             <TextAreaField
-             id="reason"
-             placeholder="Enter your reason to request a leave"
-             label="Reason"
-            
-            {...formikStep0}
+              id="reason"
+              placeholder="Enter your reason to request a leave"
+              label="Reason"
+              {...formik}
             />
           </div>
         );
 
-
       case 1:
         return (
-         <div className=" w-full space-y-6">
-           <div className=" w-full grid grid-cols-2 gap-8">
-            <div >
-              <p>Start Date:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-            <div >
-              <p>End Date:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-            <div >
-              <p>Number of Days:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-            <div >
-              <p>Leave Type:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-            <div >
-              <p>Date Requested:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
+          <div className=" w-full space-y-6">
+            <div className=" w-full grid grid-cols-2 gap-8">
+              <div>
+                <p>Start Date:</p>
+                <p>{formik.values.startDate || "Not Specified"}</p>
+              </div>
+              <div>
+                <p>End Date:</p>
+                <p>{formik.values.endDate || "Not Specified"}</p>
+              </div>
 
-            <div >
-              <p>Status:</p>
-              <p>{"Not Specified"|| ""}</p>
+              <div>
+                <p>Leave Type:</p>
+                <p>{formik.values.leaveType || "Not Specified"}</p>
+              </div>
+            </div>
+            <div>
+              <p>Reason:</p>
+              <p>{formik.values.reason || "Not Specified"}</p>
             </div>
           </div>
-          <div >
-              <p>Reason:</p>
-              <p>
-{"Not Specified"|| ""}
-              </p>
-            </div>
-         </div>
         );
 
       default:
@@ -248,7 +244,7 @@ export default function CreateLeaveButton() {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full xl:w-5/12  min-h-[80vh]">
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full xl:w-5/12  xl:h-max ">
                   <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
@@ -256,7 +252,7 @@ export default function CreateLeaveButton() {
                           as="h3"
                           className="text-lg font-medium leading-6 flex justify-between items-center w-full text-gray-900"
                         >
-                         Request for a leave
+                          Request for a leave
                           <button
                             title="close"
                             type="button"
@@ -269,36 +265,44 @@ export default function CreateLeaveButton() {
                         </Dialog.Title>
                         <div className="mt-2">
                           <p className="text-sm text-gray-500">
-                       Fill in the neccessary data to request for a leave
+                            Fill in the neccessary data to request for a leave
                           </p>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className=" w-full px-10 flex gap-5 flex-col ">
+                  <div className=" w-full px-10 flex gap-5 flex-col  ">
                     <Steps currentStep={currentStep} />
                     <div>{renderData()}</div>
                   </div>
 
-                  <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 absolute bottom-0 right-0">
-                 {
-                  currentStep === 1 ? (   <button
-                    type="button"
-                    
-                    className={`inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm ${!formikStep0.isValid ||  !formikStep0.dirty ? "cursor-not-allowed ":"" }`}
-                    onClick={() => nextStep()}
-                    disabled={!formikStep0.isValid || !formikStep0.dirty}
-                  >
-                 Submit
-                  </button>):(   <button
-                      type="button"
-                      className="inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                      onClick={() => nextStep()}
-                   
-                    >
-                      Next
-                    </button>)
-                 }
+                  <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6  right-0">
+                    {currentStep === 1 ? (
+                      <button
+                        type="button"
+                        className={`inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm `}
+                        onClick={() => formik.handleSubmit()}
+                      >
+                        {isLoading ? (
+                          <ClipLoader size={20} color="black" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className={`inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm${
+                          !formik.isValid || !formik.dirty
+                            ? "cursor-not-allowed "
+                            : ""
+                        }`}
+                        onClick={() => nextStep()}
+                        disabled={!formik.isValid || !formik.dirty}
+                      >
+                        Next
+                      </button>
+                    )}
                     <button
                       type="button"
                       className={`mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm ${

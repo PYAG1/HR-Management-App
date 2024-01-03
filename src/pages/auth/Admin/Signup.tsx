@@ -96,7 +96,7 @@ function AdminSignup() {
                 <div className="flex items-center justify-end">
                   <div className="text-sm flex justify-end leading-6">
                     <button className="underline manrope text-[#4c4c4c]   hover:text-primary">
-                      <Link to="/auth/login">Have an account?</Link>
+                      <Link to="/auth/admin/login">Have an account?</Link>
                     </button>
                   </div>
                 </div>

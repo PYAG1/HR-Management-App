@@ -1,17 +1,27 @@
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 
 import { CheckIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import emailjs, { sendForm } from "@emailjs/browser";
 import { useFormik } from "formik";
 import TextField from "../../../core-ui/text-field";
 import * as Yup from "yup";
 import CustomSelect from "../../../core-ui/custom-select";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  CreateEmployeeMutation,
+  GetAllDepartments,
+} from "../../../utils/adminActions";
+import { ClipLoader } from "react-spinners";
+import toast from "react-hot-toast";
+import { EMAILJS_KEY, SERVICE_KEY, TEMP_KEY, generatePwd } from "../../../utils";
 
 const steps = [
   { id: "01", name: "Applicant details", href: "#", status: "current" },
   { id: "02", name: "Application form", href: "#", status: "upcoming" },
   { id: "03", name: "Preview", href: "#", status: "upcoming" },
 ];
+
 
 function Steps({ currentStep }: { currentStep: number }) {
   const stackHeaders = steps.map((step, index) => ({
@@ -63,9 +73,32 @@ function Steps({ currentStep }: { currentStep: number }) {
 
 export default function CreateEmployeeButton() {
   const [open, setOpen] = useState(false);
+  const [formContent, setFormContent] = useState<any>();
 
   const cancelButtonRef = useRef(null);
   const [currentStep, setCurrentStep] = useState(0);
+  const queryClient = useQueryClient();
+  const {
+    isLoading,
+    isError,
+    isSuccess,
+    error,
+    mutate: CreateEmployee,
+  } = useMutation({
+    mutationFn: CreateEmployeeMutation,
+    onSuccess: () => {
+    formikStep0.resetForm()
+    sendEmail();
+      setOpen(false);
+      setCurrentStep(0);
+      queryClient.invalidateQueries(["get_allEmployees"]);
+    },
+  });
+  const {
+    isLoading: loading,
+    isError: Error,
+    data: departmentData,
+  } = useQuery({ queryKey: ["get_departments"], queryFn: GetAllDepartments });
 
   const nextStep = () => {
     setCurrentStep((prevStep) => Math.min(prevStep + 1, steps.length - 1));
@@ -75,14 +108,18 @@ export default function CreateEmployeeButton() {
     setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
   };
   const validationSchemaStep0 = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Email is required'),
-    firstname: Yup.string().required('First name is required'),
-    lastname: Yup.string().required('Last name is required'),
-    departmentId: Yup.string().required('Department ID is required'),
-    role: Yup.string().required('Role is required'),
-    salary: Yup.number().required('Salary is required').positive('Salary must be a positive number'),
-    gender: Yup.string().oneOf(['Male', 'Female'], 'Invalid gender').required('Gender is required'),
-    contact: Yup.string().required('Contact number is required'),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    firstname: Yup.string().required("First name is required"),
+    lastname: Yup.string().required("Last name is required"),
+    departmentId: Yup.string().required("Department ID is required"),
+    role: Yup.string().required("Role is required"),
+    salary: Yup.number()
+      .required("Salary is required")
+      .positive("Salary must be a positive number"),
+    gender: Yup.string()
+      .oneOf(["Male", "Female"], "Invalid gender")
+      .required("Gender is required"),
+    contact: Yup.string().required("Contact number is required"),
   });
 
   const formikStep0 = useFormik({
@@ -92,25 +129,33 @@ export default function CreateEmployeeButton() {
       lastname: "",
       gender: "",
       contact: "",
-      role: '',
-      salary: '',
-      departmentId:""
-   
-      
+      role: "",
+      salary: "",
+      password: generatePwd(8),
+      departmentId: "",
     },
     validationSchema: validationSchemaStep0,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      await CreateEmployee(values);
+    
     },
   });
+  const form = useRef<any>();
 
-
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Employee added successfully");
+    }
+    if (isError) {
+      toast.error(`${error}`);
+    }
+  }, [isSuccess, isError]);
 
   const renderData = () => {
     switch (currentStep) {
       case 0:
         return (
-          <div className="w-full grid grid-cols-2 gap-5">
+          <div className="w-full grid grid-cols-2 gap-10">
             <TextField
               type={"text"}
               id={"firstname"}
@@ -125,13 +170,7 @@ export default function CreateEmployeeButton() {
               label={"Lastname"}
               {...formikStep0}
             />
-            <TextField
-              type={"email"}
-              id={"email"}
-              placeholder={"Enter Email"}
-              label={"Email"}
-              {...formikStep0}
-            />
+
             <TextField
               type={"text"}
               id={"contact"}
@@ -153,71 +192,89 @@ export default function CreateEmployeeButton() {
 
       case 1:
         return (
-          <div className=" grid grid-cols-2 gap-5">
-      <TextField
-      id="role"
-      placeholder="Enter assigned role"
-      label="Role"
-      type="text"
-      {...formikStep0}
-      />
-         <TextField
-      id="salary"
-      placeholder="Enter gross salary"
-      label="Salary(Ghc)"
-      type="number"
-      {...formikStep0}
-      />
-      <CustomSelect
-           options={[
-            { id: "Male", name: "Male" },
-            { id: "Female", name: "Female" },
-          ]}
-          id={"departmentId"}
-          label={"Department"}
-          {...formikStep0}
-      />
-          </div>
+          <form className=" grid grid-cols-2 gap-5" ref={form} id="form">
+            <TextField
+              type={"email"}
+              id={"email"}
+              placeholder={"Enter Email"}
+              label={"Email"}
+              {...formikStep0}
+            />
+            <TextField
+              type={"password"}
+              id={"password"}
+              placeholder={""}
+              label={"Password"}
+              readonly={true}
+              {...formikStep0}
+            />
+            <TextField
+              id="role"
+              placeholder="Enter assigned role"
+              label="Role"
+              type="text"
+              {...formikStep0}
+            />
+            <TextField
+              id="salary"
+              placeholder="Enter gross salary"
+              label="Salary(Ghc)"
+              type="number"
+              {...formikStep0}
+            />
+            <CustomSelect
+              options={
+                loading
+                  ? [{ id: "loading", name: "Loading..." }]
+                  : Error
+                  ? [{ id: "error", name: "Failed to Fetch" }]
+                  : departmentData?.data?.data || []
+              }
+              id={"departmentId"}
+              label={"Department"}
+              {...formikStep0}
+            />
+          </form>
         );
 
       case 2:
         return (
           <div>
-                      <div className=" w-full grid grid-cols-2 gap-8">
-            <div >
-              <p>FirstName:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-            <div >
-              <p>LastName:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-            <div >
-              <p>Email:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-            <div >
-              <p>Contact:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-            <div >
-              <p>Role:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
+            <div className=" w-full grid grid-cols-2 gap-8">
+              <div>
+                <p>FirstName:</p>
+                <p>{formikStep0.values.firstname || "Not Specified"}</p>
+              </div>
+              <div>
+                <p>LastName:</p>
+                <p>{formikStep0.values.lastname || "Not Specified"}</p>
+              </div>
+              <div>
+                <p>Email:</p>
+                <p>{formikStep0.values.email || "Not Specified"}</p>
+              </div>
+              <div>
+                <p>Contact:</p>
+                <p>{formikStep0.values.contact || "Not Specified"}</p>
+              </div>
+              <div>
+                <p>Role:</p>
+                <p>{formikStep0.values.role || "Not Specified"}</p>
+              </div>
 
-            <div >
-              <p>Salary:</p>
-              <p>{"Not Specified"|| ""}</p>
+              <div>
+                <p>Salary:</p>
+                <p>{formikStep0.values.salary || "Not Specified"}</p>
+              </div>
+              <div>
+                <p>Department:</p>
+                <p>{formikStep0.values.departmentId || "Not Specified"}</p>
+              </div>
+              <div>
+                <p>Gender:</p>
+                <p>{formikStep0.values.gender || "Not Specified"}</p>
+              </div>
             </div>
-            <div >
-              <p>Department:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-            <div >
-              <p>Gender:</p>
-              <p>{"Not Specified"|| ""}</p>
-            </div>
-          </div>
           </div>
         );
 
@@ -225,7 +282,23 @@ export default function CreateEmployeeButton() {
         return null; // Handle invalid step number
     }
   };
-
+  const sendEmail = () => {
+    emailjs
+      .sendForm(
+        SERVICE_KEY,
+        TEMP_KEY,
+        formContent,
+        EMAILJS_KEY
+      )
+      .then(
+        (result) => {
+          toast.success("email sent");
+        },
+        (error) => {
+          console.log("email not sent");
+        }
+      );
+  };
   return (
     <>
       <button
@@ -265,7 +338,7 @@ export default function CreateEmployeeButton() {
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full xl:w-8/12 h-[70vh]">
+                <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full xl:w-8/12 min-h-[72vh]">
                   <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                       <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
@@ -286,7 +359,7 @@ export default function CreateEmployeeButton() {
                         </Dialog.Title>
                         <div className="mt-2">
                           <p className="text-sm text-gray-500">
-                       Fill in the neccessary data to add an employee
+                            Fill in the neccessary data to add an employee
                           </p>
                         </div>
                       </div>
@@ -297,25 +370,42 @@ export default function CreateEmployeeButton() {
                     <div>{renderData()}</div>
                   </div>
 
-                  <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 absolute bottom-0 right-0">
-                 {
-                  currentStep === 2 ? (   <button
-                    type="button"
-                    
-                    className={`inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm ${!formikStep0.isValid ||  !formikStep0.dirty ? "cursor-not-allowed ":"" }`}
-                    onClick={() => nextStep()}
-                    disabled={!formikStep0.isValid || !formikStep0.dirty}
-                  >
-                 Submit
-                  </button>):(   <button
-                      type="button"
-                      className="inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                      onClick={() => nextStep()}
-                   
-                    >
-                      Next
-                    </button>)
-                 }
+                  <div className=" px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 absolute bottom-0 right-0">
+                    {currentStep === 2 ? (
+                      <button
+                        type="button"
+                        className={`inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm ${
+                          !formikStep0.isValid || !formikStep0.dirty
+                            ? "cursor-not-allowed "
+                            : ""
+                        }`}
+                        onClick={async (
+                
+                        ) => {
+                          formikStep0.handleSubmit();
+                        }}
+                        disabled={!formikStep0.isValid || !formikStep0.dirty}
+                      >
+                        {isLoading ? (
+                          <ClipLoader size={20} color="white" />
+                        ) : (
+                          "Submit"
+                        )}
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="inline-flex w-full justify-center rounded-md border border-transparent bg-primary px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-primary/60 focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                        onClick={() => {
+                          nextStep();
+                          if (currentStep === 1) {
+                            setFormContent(form.current);
+                          }
+                        }}
+                      >
+                        Next
+                      </button>
+                    )}
                     <button
                       type="button"
                       className={`mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm ${

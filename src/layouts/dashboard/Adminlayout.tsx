@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, SetStateAction, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -12,6 +12,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { extractPageTitle } from "../../utils";
+import LogoutNotification from "../../components/Logout";
+import { useHrAppContext } from "../../context";
 
 const navigation = [
   {
@@ -43,8 +45,10 @@ function classNames(...classes: string[]) {
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const location = useLocation();
 
+
+  const location = useLocation();
+const {showNotification,setShowNotification}  = useHrAppContext()
   const pageTitle = extractPageTitle(location.pathname);
 
   // Update the 'current' property based on the current route
@@ -55,14 +59,7 @@ export default function AdminLayout() {
 
   return (
     <>
-      {/*
-        This example requires updating your template:
 
-        ```
-        <html class="h-full bg-gray-100">
-        <body class="h-full">
-        ```
-      */}
       <div>
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -182,7 +179,7 @@ export default function AdminLayout() {
 
         {/* Static sidebar for desktop */}
         <div className="hidden xl:fixed xl:inset-y-0 xl:flex xl:w-64 xl:flex-col">
-          {/* Sidebar component, swap this element with another sidebar if you like */}
+
           <div className="flex min-h-0 flex-1 flex-col bg-gray-800">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
               <div className="flex flex-shrink-0 items-center px-4">
@@ -235,7 +232,9 @@ export default function AdminLayout() {
                   </div>
                  
                 </div>
-                <ArrowRightStartOnRectangleIcon className=" w-5 h-5 text-white"/>
+              <button title="logout" onClick={()=> setShowNotification(true)}>
+              <ArrowRightStartOnRectangleIcon className=" w-5 h-5 text-white"/>
+              </button>
               </div>
             
             </div>
@@ -259,8 +258,9 @@ export default function AdminLayout() {
                   {pageTitle}
                 </h1>
               </div>
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 relative">
                 <Outlet />
+                <LogoutNotification show={showNotification} setShow={setShowNotification} name="Admin"/>
               </div>
             </div>
           </main>

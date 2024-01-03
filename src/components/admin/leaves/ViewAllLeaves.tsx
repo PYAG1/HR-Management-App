@@ -4,7 +4,7 @@ import { XMarkIcon, EyeIcon } from "@heroicons/react/24/outline";
 import { LeaveType } from "../../../utils/employeeActions";
 import { formatDate } from "../../../utils";
 
-export default function LeaveDetailsModal({ data }: { data: LeaveType }) {
+export default function ViewAllLeavesModal({ data }: { data: LeaveType }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -12,7 +12,7 @@ export default function LeaveDetailsModal({ data }: { data: LeaveType }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="relative inline-flex items-center rounded-md  bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
+        className="relative inline-flex items-center rounded-r-md  bg-white px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-10"
       >
         <span className="sr-only">Annotate</span>
         <EyeIcon className="h-4 w-4" aria-hidden="true" />
@@ -69,13 +69,37 @@ export default function LeaveDetailsModal({ data }: { data: LeaveType }) {
                       </Dialog.Title>
                       <div className="mt-2">
                         <div className="overflow-hidden bg-white shadow sm:rounded-lg">
-                          <dl className="grid grid-cols-1 sm:grid-cols-2 divide-y divide-gray-100 p-4">
+                          <dl className="grid grid-cols-1 sm:grid-cols-3 divide-y divide-gray-100 p-4">
+                          <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                              <dt className="text-sm font-medium leading-6 text-gray-900">
+                                Name
+                              </dt>
+                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                           {data?.employee?.firstname} {data?.employee?.lastname}
+                              </dd>
+                            </div>
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                              <dt className="text-sm font-medium leading-6 text-gray-900">
+                               Department
+                              </dt>
+                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                                {data?.employee?.departmentId}
+                              </dd>
+                            </div>
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                              <dt className="text-sm font-medium leading-6 text-gray-900">
+                             Role
+                              </dt>
+                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                                {data?.employee?.role}
+                              </dd>
+                            </div>
                             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
                               <dt className="text-sm font-medium leading-6 text-gray-900">
                                 Start Date
                               </dt>
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                {formatDate(data.startDate)}
+                                {formatDate(data?.startDate)}
                               </dd>
                             </div>
                             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -83,7 +107,7 @@ export default function LeaveDetailsModal({ data }: { data: LeaveType }) {
                                 End Date
                               </dt>
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                {formatDate(data.endDate)}
+                                {formatDate(data?.endDate)}
                               </dd>
                             </div>
                             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -91,7 +115,7 @@ export default function LeaveDetailsModal({ data }: { data: LeaveType }) {
                                 Leave Type
                               </dt>
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                {data.leaveType}
+                                {data?.leaveType}
                               </dd>
                             </div>
                             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -99,7 +123,7 @@ export default function LeaveDetailsModal({ data }: { data: LeaveType }) {
                                 Duration
                               </dt>
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                {data.duration}
+                                {data?.duration}
                               </dd>
                             </div>
                             <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
@@ -109,7 +133,17 @@ export default function LeaveDetailsModal({ data }: { data: LeaveType }) {
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
                                 {
                                   //@ts-ignore
-                                  formatDate(data.createdOn)
+                                  formatDate(data?.createdOn)
+                                }
+                              </dd>
+                            </div>
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-1 sm:px-0">
+                              <dt className="text-sm font-medium leading-6 text-gray-900">
+                               Leave Days Remaining
+                              </dt>
+                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                                {
+                                data?.employee?.leaveDaysRemaining
                                 }
                               </dd>
                             </div>
@@ -118,7 +152,7 @@ export default function LeaveDetailsModal({ data }: { data: LeaveType }) {
                                 Status
                               </dt>
                               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
-                                {data.status === "Pending" ? (
+                                {data?.status === "Pending" ? (
                                   <span className="inline-flex items-center gap-x-1.5 rounded-md bg-yellow-100 px-1.5 py-0.5 text-xs font-medium text-yellow-800">
                                     <svg
                                       className="h-1.5 w-1.5 fill-yellow-500"
@@ -129,7 +163,7 @@ export default function LeaveDetailsModal({ data }: { data: LeaveType }) {
                                     </svg>
                                     Pending
                                   </span>
-                                ) : data.status === "Approved" ? (
+                                ) : data?.status === "Approved" ? (
                                   <span className="inline-flex items-center gap-x-1.5 rounded-md bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
                                     <svg
                                       className="h-1.5 w-1.5 fill-green-500"
@@ -152,6 +186,15 @@ export default function LeaveDetailsModal({ data }: { data: LeaveType }) {
                                     Rejected
                                   </span>
                                 )}
+                              </dd>
+                              
+                            </div>
+                            <div className="border-t border-gray-100 px-4 py-6 sm:col-span-2 sm:px-0">
+                              <dt className="text-sm font-medium leading-6 text-gray-900">
+                               Reason
+                              </dt>
+                              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:mt-2">
+                                {data?.reason}
                               </dd>
                             </div>
                           </dl>
