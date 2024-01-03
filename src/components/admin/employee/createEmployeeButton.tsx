@@ -87,7 +87,7 @@ export default function CreateEmployeeButton() {
   } = useMutation({
     mutationFn: CreateEmployeeMutation,
     onSuccess: () => {
-      //  formikStep0.resetForm()
+    formikStep0.resetForm()
     sendEmail();
       setOpen(false);
       setCurrentStep(0);
