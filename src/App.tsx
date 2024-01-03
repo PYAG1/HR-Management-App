@@ -2,6 +2,7 @@ import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { NavItem } from "./components/landing-page";
 import pattern from './assets/images/circle-scatter-haikei.svg'
 import snapshot from './assets/images/screenshot.jpeg'
+import { Link } from "react-router-dom";
 function App() {
   const dropDownItems = [
     {
@@ -13,28 +14,26 @@ function App() {
         },
         {
           name: "Employee",
-          link: "/employee",
+          link: "/auth/employee/login",
         },
       ],
     },
     {
       name: "Product",
       children: [
-        {
-          name: "Payroll",
-          link: "/employee",
-        },
+     
         {
           name: "Leave Management",
-          link: "/auth/admin/login",
+          link: "/admin/leaves",
         },
-        {
-          name: "Attendance Management",
-          link: "/employee",
-        },
+     
         {
           name: "Recruitment Management",
-          link: "/employee",
+          link: "/admin/employee",
+        },
+        {
+          name: "Department Management",
+          link: "/admin/departments",
         },
       ],
     },
@@ -47,15 +46,15 @@ function App() {
         },
         {
           name: "Node SDK",
-          link: "/employee",
+          link: "#",
         },
         {
           name: "Spring SDK",
-          link: "/employee",
+          link: "#",
         },
         {
           name: "React SDK",
-          link: "/employee",
+          link: "#",
         },
       ],
     },
@@ -64,15 +63,15 @@ function App() {
       children: [
         {
           name: "Startup",
-          link: "/auth/admin/login",
+          link: "#",
         },
         {
           name: "Business",
-          link: "/employee",
+          link: "#",
         },
         {
           name: "Enterprise",
-          link: "/employee",
+          link: "#",
         },
       ],
     },
@@ -119,9 +118,14 @@ function App() {
               Potential with Our Innovative HR Management App.
             </p>
 
-            <button className="bg-white px-4 py-[0.75rem] text-[1rem] rounded-2xl hover:bg-[#ece8ff]">
-              Get Started
-            </button>
+     <div className=" flex gap-5">
+     <Link to={"/auth/admin/login"} className="bg-white px-4 py-[0.75rem] text-[1rem] rounded-2xl hover:bg-[#ece8ff]">
+              Admin
+            </Link>
+            <Link to={"/auth/employee/login"} className="bg-background px-4 py-[0.75rem] text-[1rem] text-white rounded-2xl hover:text-black hover:bg-primary">
+             Employee
+            </Link>
+     </div>
           </div>
           <div className="w-[45%]  bg-[#2f0b6a]/60   mt-[4rem]  text-black outline-2  mx-auto rounded-3xl p-4 border-[0.7rem] border-white g">
             <img src={snapshot} className="rounded-2xl  " alt="hrXpert" />
