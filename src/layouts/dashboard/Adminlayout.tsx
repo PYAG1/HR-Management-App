@@ -258,7 +258,7 @@ const {showNotification,setShowNotification}  = useHrAppContext()
                   {pageTitle}
                 </h1>
               </div>
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 relative">
+              <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 relative bg-white">
                 <Outlet />
                 <LogoutNotification show={showNotification} setShow={setShowNotification} name="Admin"/>
               </div>
