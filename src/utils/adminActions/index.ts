@@ -1,7 +1,5 @@
-import axios from "axios"
-import toast from "react-hot-toast"
+import axios from "axios";
 import { BASE_URL } from "..";
-import { useNavigate } from "react-router-dom";
 
 
  const AdminToken = localStorage.getItem("admin-token")

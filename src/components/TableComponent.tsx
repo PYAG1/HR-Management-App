@@ -18,7 +18,7 @@ export default function TableComponent({
   total
 }: TableComponentTypes) {
   const isEmpty = !loading && !renderBody();
-  console.log(renderBody())
+
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 h-full w-full">

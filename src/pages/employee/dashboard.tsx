@@ -3,25 +3,18 @@ import {
   CheckIcon,
   XMarkIcon,
 } from "@heroicons/react/20/solid";
-import {
-  CheckBadgeIcon,
-  CursorArrowRaysIcon,
-  UserMinusIcon,
-  UsersIcon,
-} from "@heroicons/react/24/solid";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
+import { PuffLoader } from "react-spinners";
+import { useHrAppContext } from "../../context";
 import {
   LeaveType,
   getEmpLeaveHistory,
   getSingleEmployee,
 } from "../../utils/employeeActions";
-import { Link } from "react-router-dom";
-import Skeleton from "react-loading-skeleton";
-import { PuffLoader } from "react-spinners";
 import { getTimeOfDay } from "../../utils/getTimeOfDay";
-import toast from "react-hot-toast";
-import { useHrAppContext } from "../../context";
 
 export default function Emdashboard() {
   const {
