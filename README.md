@@ -2,13 +2,16 @@ This is actually a V2 our software engineering mini project.
 
 FrontEnd: PYAG1 ,
 BackEnd: https://github.com/frimpsss
+
+This is a simple HR-app with two main platforms, admin and employee.
+
 ![HR Management App](https://github.com/PYAG1/HR-Management-App/raw/main/src/assets/images/hrxpert.png)
 
 NB: For desktop screens
 
 
 
-This is a simple HR-app with two main platforms, admin and employee.
+
 
 
 
