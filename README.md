@@ -30,14 +30,28 @@ Old Url : https://humanresource5.vercel.app/
 
 ADMIN FUNCTIONALITIES
 . Onboarding and Offboarding of employees
+
+
 . Access to employee history and employee leave history
+
+
 . Editing employee information
+
+
 . Approving or Rejecting employee leaves
+
+
 . Adding new Departments
 
 EMPLOYEE FUNCTIONALITIES
-. Access your information           
+. Access your information   
+
+
 . Edit some personal info
+
+
 . Request for leaves
+
+
 . View leave history
 
