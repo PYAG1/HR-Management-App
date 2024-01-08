@@ -118,7 +118,7 @@ export default function Leaves() {
                   {leave.leaveType}
                 </td>
                 <td className="px-3 py-4 text-sm text-gray-500">
-                  {leave.status === "Pending" ? (
+                {leave.status === "Pending" ? (
                     <span className="inline-flex items-center gap-x-1.5 rounded-md bg-yellow-100 px-1.5 py-0.5 text-xs font-medium text-yellow-800">
                       <svg
                         className="h-1.5 w-1.5 fill-yellow-500"
@@ -152,6 +152,7 @@ export default function Leaves() {
                       Rejected
                     </span>
                   )}
+                  
                 </td>
                 <td className="py-4 pl-3 pr-4 text-right text-sm font-medium  sm:pr-6">
                   <div className="relative">
