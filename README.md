@@ -6,7 +6,7 @@ BackEnd: https://github.com/frimpsss
 
 
 This is a simple HR-app with two main platforms, admin and employee.
-
+Current Url: https://hrxpert.vercel.app/
 
 ![HR Management App](https://github.com/PYAG1/HR-Management-App/raw/main/src/assets/images/hrxpert.png)
 
@@ -25,7 +25,7 @@ Main Branch contains base UI without integration.
 
 
 
-Current Url: https://hrxpert.vercel.app/
+
 
 
 Old Url : https://humanresource5.vercel.app/
